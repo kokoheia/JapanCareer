@@ -1,0 +1,6 @@
+framework module Pods_JapanCareer {
+  umbrella header "Pods-JapanCareer-umbrella.h"
+
+  export *
+  module * { export * }
+}
