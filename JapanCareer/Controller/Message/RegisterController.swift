@@ -11,6 +11,10 @@ import Firebase
 
 class RegisterController: UIViewController {
     
+    var isStudent: Bool {
+        return studentCompanySegmentedControl.selectedSegmentIndex == 0 ? true : false
+    }
+    
     var dismissButton : UIButton = {
         let button = UIButton()
         button.backgroundColor = .red
@@ -91,7 +95,6 @@ class RegisterController: UIViewController {
     }()
     
     
-    
     private var signInBar: UIView = {
         var bar = UIView()
         bar.backgroundColor = UIColor.darkBlueColor
@@ -132,6 +135,13 @@ class RegisterController: UIViewController {
         return iv
     }()
     
+    var studentCompanySegmentedControl: UISegmentedControl = {
+        let sc = UISegmentedControl(items: ["Student", "Company"])
+        sc.translatesAutoresizingMaskIntoConstraints = false
+        sc.tintColor = .white
+        sc.selectedSegmentIndex = 0
+        return sc
+    }()
 
     
     @objc private func handleShowLogin() {
@@ -149,8 +159,8 @@ class RegisterController: UIViewController {
         setupButton()
         setupSignInBar()
         setupImageView()
-        
-        
+        setupSegmentedControl()
+    
         view.addSubview(dismissButton)
         dismissButton.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         dismissButton.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -158,10 +168,18 @@ class RegisterController: UIViewController {
         dismissButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
+    private func setupSegmentedControl() {
+        view.addSubview(studentCompanySegmentedControl)
+        studentCompanySegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        studentCompanySegmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 210).isActive = true
+        studentCompanySegmentedControl.widthAnchor.constraint(equalToConstant: 244).isActive = true
+        studentCompanySegmentedControl.heightAnchor.constraint(equalToConstant: 29).isActive = true
+    }
+    
     private func setupImageView() {
         view.addSubview(imageView)
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 75).isActive = true
+        imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 71).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
@@ -196,17 +214,17 @@ class RegisterController: UIViewController {
         view.addSubview(passwordInput)
         
         nameInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        nameInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -415).isActive = true
+        nameInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -373).isActive = true
         nameInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
         nameInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
         emailInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        emailInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -344).isActive = true
+        emailInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -302).isActive = true
         emailInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
         emailInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
         passwordInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        passwordInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -270).isActive = true
+        passwordInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -228).isActive = true
         passwordInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
         passwordInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
 
@@ -215,7 +233,7 @@ class RegisterController: UIViewController {
     private func setupButton() {
         view.addSubview(registerButton)
         registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        registerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -159).isActive = true
+        registerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -117).isActive = true
         registerButton.widthAnchor.constraint(equalToConstant: 271).isActive = true
         registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }

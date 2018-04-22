@@ -21,7 +21,9 @@ class CompanyHeaderCell: BaseTableViewCell {
     
     private var profileImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = UIImage(named: "abeja-logo")
+        iv.image = UIImage(named: "apple-logo2")
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.layer.cornerRadius = 13
         iv.layer.masksToBounds = true
@@ -40,7 +42,7 @@ class CompanyHeaderCell: BaseTableViewCell {
     
     private var companyNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "ABEJA"
+        label.text = "Company A"
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -56,11 +58,12 @@ class CompanyHeaderCell: BaseTableViewCell {
     
     private var companyIndustryLabel: UILabel = {
         let label = UILabel()
-        label.text = "Software service / Deep learning"
+        label.text = "Software service"
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
     
     
     private func setupCompanyBody() {

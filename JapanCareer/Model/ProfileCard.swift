@@ -8,7 +8,9 @@
 
 import Foundation
 
-class ProfileCard: Equatable {
+class ProfileCard: Equatable, NSCopying {
+    
+    
     var type: ProfileCardType?
     var sectionName: String?
     
@@ -19,8 +21,27 @@ class ProfileCard: Equatable {
     
     lazy var labelDataList = [title, detailTitle, startTime, endTime]
     
-    init(type: ProfileCardType) {
+    convenience init(type: ProfileCardType) {
+        self.init()
         self.type = type
+    }
+    
+    convenience init(dictionary: [String: AnyObject]) {
+        self.init()
+        self.title = dictionary["title"] as? String
+        self.detailTitle = dictionary["subtitle"] as? String
+        self.startTime = dictionary["startTime"] as? String
+        self.endTime = dictionary["endTime"] as? String
+        
+    }
+    
+    func info() {
+        print(self.type)
+        print(self.sectionName)
+        print(self.title)
+        print(self.detailTitle)
+        print(self.startTime)
+        print(self.endTime)
     }
     
     func editTitles() -> [String] {
@@ -37,10 +58,19 @@ class ProfileCard: Equatable {
     }
     
     static func == (lhs: ProfileCard, rhs: ProfileCard) -> Bool {
-        if lhs.type == rhs.type, lhs.sectionName == rhs.sectionName, lhs.title == rhs.title, lhs.detailTitle == rhs.detailTitle, lhs.startTime == rhs.startTime, lhs.endTime == rhs.endTime {
+        if lhs.title == rhs.title, lhs.detailTitle == rhs.detailTitle, lhs.startTime == rhs.startTime, lhs.endTime == rhs.endTime {
             return true
         }
         return false
+    }
+    
+    func copy(with zone: NSZone? = nil) -> Any {
+        let copy = ProfileCard()
+        copy.title = title
+        copy.detailTitle = detailTitle
+        copy.startTime = startTime
+        copy.endTime = endTime
+        return copy
     }
 }
 

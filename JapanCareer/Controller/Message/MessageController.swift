@@ -11,6 +11,7 @@ import Firebase
 
 class MessageController: UITableViewController {
     
+    var isStudent: Bool?
     var cellId = "cellId"
 
     override func viewDidLoad() {
@@ -20,6 +21,8 @@ class MessageController: UITableViewController {
         tableView.separatorColor = .clear
         checkIfUserLoggedIn()
         observeUserMessage()
+        print(isStudent)
+
     }
     
     private func setupNavigationItem() {
@@ -96,22 +99,49 @@ class MessageController: UITableViewController {
     private func checkIfUserLoggedIn() {
         if let uid = Auth.auth().currentUser?.uid {
             fetchUserAndSetUpNavBarTitle()
+            checkIfUserStudentOrCompany(with: uid)
+            
         } else {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
     }
     
+    private func checkIfUserStudentOrCompany(with uid: String) {
+        let ref = Database.database().reference().child("users").child(uid)
+        ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
+//            print(snapshot)
+            if let dictionary = snapshot.value as? [String : AnyObject] {
+                if let rootTabBarC = UIApplication.shared.keyWindow?.rootViewController as? CustomTabBarController {
+                    if let type  = dictionary["type"] as? String {
+                        rootTabBarC.isStudent = type == "student"
+                    }
+                }
+            }
+        }, withCancel: nil)
+    }
+    
     func fetchUserAndSetUpNavBarTitle() {
-        guard let uid = Auth.auth().currentUser?.uid else {
+        guard let uid = Auth.auth().currentUser?.uid, let isstudent = isStudent else {
+            print("couldn't get it")
             return
         }
         
-        let ref = Database.database().reference().child("users").child(uid)
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            if let dictionary = snapshot.value as? [String : AnyObject]  {
-                self.navigationItem.title = dictionary["name"] as? String
-            }
-        })
+        var ref = DatabaseReference()
+        if isstudent {
+            ref = Database.database().reference().child("users").child(uid)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String : AnyObject]  {
+                    self.navigationItem.title = dictionary["name"] as? String
+                }
+            })
+        } else {
+            ref = Database.database().reference().child("companies").child(uid)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String : AnyObject]  {
+                    self.navigationItem.title = dictionary["name"] as? String
+                }
+            })
+        }
     }
     
     

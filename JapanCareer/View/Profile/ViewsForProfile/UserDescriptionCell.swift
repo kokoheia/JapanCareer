@@ -58,7 +58,7 @@ class UserDescriptionCell : BaseTableViewCell {
         
         addSubview(separatorView)
         separatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         separatorView.widthAnchor.constraint(equalToConstant: 337).isActive = true
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         

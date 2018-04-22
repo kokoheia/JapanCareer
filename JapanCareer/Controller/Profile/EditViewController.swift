@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import Firebase
 
 class EditViewController: UIViewController, UITextFieldDelegate {
     
     var currentCard: ProfileCard?
     var currentRowNumber: Int?
+    
+    var currentCompanyDescription: String?
     
     lazy var textInput: UITextField = {
         let textField = UITextField()
@@ -43,20 +46,37 @@ class EditViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func handleDone() {
-        let rootController = navigationController?.viewControllers[1] as! ProfileEditCollectionViewController
-        let cardList = rootController.cardList
-        for card in cardList {
-            if card == currentCard {
-                
-                if let newText = textInput.text {
-                    updateCard(card: card, number: currentRowNumber!, text: newText)
+        if let rootController = navigationController?.viewControllers[1] as? ProfileEditCollectionViewController {
+            var cardList = rootController.cardList
+            for index in cardList.indices {
+                if cardList[index] == currentCard {
+                    if let newText = textInput.text {
+                       updateCard(card: cardList[index], number: currentRowNumber!, text: newText)
+                    }
+                    rootController.collectionView?.reloadData()
+                    navigationController?.popViewController(animated: true)
                 }
-                rootController.collectionView?.reloadData()
-                navigationController?.popViewController(animated: true)
             }
+        } else if let rootController = navigationController?.viewControllers[0] as? ProfileController {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                print("Couldn't get the uid")
+                return
+            }
+            // if the header is edited
+            if let text = textInput.text {
+                let ref = Database.database().reference().child("users").child(uid)
+                let value = ["name" : text]
+                ref.updateChildValues(value)
+            }
+            rootController.tableView.reloadData()
+            navigationController?.popViewController(animated: true)
+        } else {
+            print("error")
         }
+        
     }
     private func updateCard(card: ProfileCard, number: Int, text: String) {
+//        let backupCard = card.copy() as! ProfileCard
         switch number {
         case 0:
             card.title = text
@@ -68,6 +88,23 @@ class EditViewController: UIViewController, UITextFieldDelegate {
             card.endTime = text
         default:
             return
+        }
+        // check if there is a duplication
+        if let rootController = navigationController?.viewControllers[1] as? ProfileEditCollectionViewController {
+            var cardList = rootController.cardList
+            var duplicateCount = 0
+            for index in cardList.indices {
+                if cardList[index] == card {
+                    duplicateCount += 1
+                }
+                if duplicateCount >= 2 {
+                    print("You can't make same card")
+                    card.title = nil
+                    card.detailTitle = nil
+                    card.startTime = nil
+                    card.endTime = nil
+                }
+            }
         }
     }
     
@@ -82,7 +119,7 @@ class EditViewController: UIViewController, UITextFieldDelegate {
         textInput.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
         textInput.bottomAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: -10).isActive = true
         textInput.widthAnchor.constraint(equalTo: separatorView.widthAnchor).isActive = true
-    }
+   }
 
 }
 

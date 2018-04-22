@@ -1,14 +1,16 @@
 //
-//  HeaderTableViewCell.swift
+//  File.swift
 //  JapanCareer
 //
-//  Created by Kohei Arai on 2018/04/14.
+//  Created by Kohei Arai on 2018/04/18.
 //  Copyright © 2018年 Kohei Arai. All rights reserved.
 //
 
 import UIKit
 
-class HeaderTableViewCell: BaseTableViewCell {
+import UIKit
+
+class HeaderCellWithButton: BaseTableViewCell {
     var headerClearView: UIView = {
         let iv = UIView()
         iv.backgroundColor = .clear
@@ -40,7 +42,7 @@ class HeaderTableViewCell: BaseTableViewCell {
     var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Student Name"
+        label.text = "Kohei Arai"
         label.font = UIFont.systemFont(ofSize: 17 + 2, weight: .medium)
         return label
     }()
@@ -48,7 +50,7 @@ class HeaderTableViewCell: BaseTableViewCell {
     var subtitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "University Name"
+        label.text = "Carnegie Mellon University"
         label.font = UIFont.systemFont(ofSize: 14 + 2, weight: .regular)
         return label
     }()
@@ -63,11 +65,15 @@ class HeaderTableViewCell: BaseTableViewCell {
         return view
     }()
     
-    var editButton: UIButton = {
+    var messageButton: UIButton = {
         let button = UIButton(type: .custom)
-        let image = UIImage(named: "edit500")
-        button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
+        button.setTitle("Send Message", for: .normal)
+        button.backgroundColor = UIColor.applyButtonGreen
+        button.setTitleColor(.white, for: .normal)
+        button.isUserInteractionEnabled = true
         return button
     }()
     
@@ -106,13 +112,13 @@ class HeaderTableViewCell: BaseTableViewCell {
         
         addSubview(subtitleLabel)
         subtitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        subtitleLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -30).isActive = true
+        subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
         
-        addSubview(editButton)
-        editButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
-        editButton.topAnchor.constraint(equalTo: cardBackgroundView.topAnchor, constant: 15).isActive = true
-        editButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        editButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        addSubview(messageButton)
+        messageButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        messageButton.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 10).isActive = true
+        messageButton.widthAnchor.constraint(equalToConstant: 202).isActive = true
+        messageButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
     }
 }
 

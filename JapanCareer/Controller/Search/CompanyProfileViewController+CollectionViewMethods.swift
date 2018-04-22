@@ -24,7 +24,7 @@ extension CompanyProfileViewController {
         case 1:
             cell.titleLabel.text = "Job"
         case 2:
-            cell.titleLabel.text = "Language"
+            cell.titleLabel.text = "Other"
         default:
             cell.titleLabel.text = "Title"
         }

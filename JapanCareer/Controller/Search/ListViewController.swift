@@ -10,6 +10,8 @@ import UIKit
 
 class ListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
+    var isStudent: Bool?
+    
     private var cellId = "cellId"
     
     private var filteringContainerView: UIView = {
@@ -44,6 +46,8 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
+        
+        checkUserType()
 
         collectionView?.register(UserCardView.self, forCellWithReuseIdentifier: cellId)
         collectionView?.backgroundColor = UIColor.listBackgroundColor
@@ -81,6 +85,12 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
         languageFilterView.topAnchor.constraint(equalTo: filteringContainerView.topAnchor).isActive = true
         languageFilterView.widthAnchor.constraint(equalToConstant: 101).isActive = true
         languageFilterView.heightAnchor.constraint(equalToConstant: 28).isActive = true
+    }
+    
+    private func checkUserType() {
+        if let rootTabBarC = UIApplication.shared.keyWindow?.rootViewController as? CustomTabBarController {
+            isStudent = rootTabBarC.isStudent
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

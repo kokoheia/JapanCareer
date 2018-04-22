@@ -10,6 +10,8 @@ import UIKit
 
 class CompanyProfileViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
+    var isStudent = false
+    
     lazy var descriptionViewData = [aboutViewData, jobViewData, languageViewData]
     var aboutViewData = CompanyDescription()
     var jobViewData = CompanyDescription()
@@ -26,10 +28,6 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         return descriptionViewData[currentTabNumber]
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        let selectedIndexPath = IndexPath(item: 0, section: 0)
-        containerCollectionView.selectItem(at: selectedIndexPath, animated: true, scrollPosition: [])
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +36,9 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         tableView.register(ButtonTableViewCell.self, forCellReuseIdentifier: buttonCellId)
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         tableView.separatorColor = .clear
+        let selectedIndexPath = IndexPath(item: 0, section: 0)
+        containerCollectionView.selectItem(at: selectedIndexPath, animated: true, scrollPosition: [])
+        setupNavBar()
         
         self.tabBarController?.tabBar.isHidden = true
         tableView.backgroundColor = .white
@@ -45,6 +46,42 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         fetchCompanyData()
     }
     
+    private func setupEditButton(with cell: CompanyDescriptionTableViewCell) {
+        if isStudent {
+            cell.editButton.isHidden = true
+            cell.editButton.isEnabled = false
+        } else {
+            cell.editButton.isHidden = false
+            cell.editButton.isEnabled = true
+            cell.editButton.addTarget(self, action: #selector(handleEdit), for: .touchUpInside)
+        }
+    }
+    
+    private func setupNavBar() {
+        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleChangeTest))
+        navigationItem.rightBarButtonItem = editButton
+    }
+    
+    @objc private func handleChangeTest() {
+        isStudent = !isStudent
+        tableView.reloadData()
+    }
+
+    @objc private func handleEdit(_ sender: UIButton) {
+        let cell = sender.superview as! CompanyDescriptionTableViewCell
+        if let indexPath = tableView.indexPath(for: cell) {
+            let ev = EditCompanyDescription()
+            let currentData = currentDescriptionViewData
+            let title = currentData.titles![indexPath.row]
+            let description = currentData.details![indexPath.row]
+            ev.textInput.text = description
+            ev.navigationItem.title = title
+            ev.currentIndexPath = indexPath
+            ev.currentTabNum = currentTabNumber
+            navigationController?.pushViewController(ev, animated: true)
+        }
+    }
+
     private func fetchCompanyData() {
         aboutViewData.titles = ["About Company","Vision","Value"]
         aboutViewData.details =  ["Apple Inc. is an American multinational technology company headquartered in Cupertino, California, that designs, develops, and sells consumer electronics, computer software, and online services. The company's hardware products include the iPhone smartphone, the iPad tablet computer, the Mac personal computer, the iPod portable media player, the Apple Watch smartwatch,the Apple TV digital media player, and the HomePod smart speaker." ,  "We believe that we are on the face of the earth to make great products and that’s not changing. We are constantly focusing on innovating. We believe in the simple not the complex. We believe that we need to own and control the primary technologies behind the products that we make, and participate only in markets where we can make a significant contribution. We believe in saying no to thousands of projects, so that we can really focus on the few that are truly important and meaningful to us.", "Apple is more than just a company because its founding has some of the qualities of myth ... Apple is two guys in a garage undertaking the mission of bringing computing power, once reserved for big corporations, to ordinary individuals with ordinary budgets. The company's growth from two guys to a billion-dollar corporation exemplifies the American Dream."]
@@ -88,6 +125,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
             let cell = tableView.dequeueReusableCell(withIdentifier: companyDescriptionId, for: indexPath) as! CompanyDescriptionTableViewCell
             cell.titleLabel.text = currentDescriptionViewData.titles![indexPath.row]
             cell.detailLabel.text = currentDescriptionViewData.details![indexPath.row]
+            setupEditButton(with: cell)
             return cell
         default:
             return UITableViewCell()
@@ -155,7 +193,6 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         return view
     }()
     
-    
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = headerBackgroundView
         setupCollectionViewWithHighLighingView(on: view)
@@ -171,7 +208,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         
         view.addSubview(highlightingView)
         let constant = CGFloat(currentTabNumber) * tableView.bounds.width / 3
-        print(constant)
+
         highlightLeftAnchor =  highlightingView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: constant)
         highlightLeftAnchor?.isActive = true
         highlightingView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true

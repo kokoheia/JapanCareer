@@ -11,6 +11,7 @@ import Firebase
 
 extension RegisterController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    
     @objc func handlePickUpImage() {
         let imagePicker = UIImagePickerController()
         
@@ -33,6 +34,7 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     @objc func handleRegister() {
+
         guard let name = nameInput.textInput.text,  let email = emailInput.textInput.text, let password = passwordInput.textInput.text else {
             print("Form is not valid")
             return
@@ -43,7 +45,6 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
                 print(err!)
                 return
             }
-            
             guard let uid = user?.uid else {
                 print("couldn't catch uid")
                 return
@@ -55,7 +56,8 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
                     
                     if let profileImageUrlString = metadata?.downloadURL()?.absoluteString {
                         
-                        let values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString]
+                        let userType = self.isStudent ? "student" : "company"
+                        let values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString, "type": userType]
                         
                         if err != nil {
                             print(err!)
@@ -63,17 +65,13 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
                         }
                         self.registerUserIntoDatabase(with: uid, values: values as [String : AnyObject])
                     }
-
                 })
-                
             }
-
         }
     }
     
     private func registerUserIntoDatabase(with uid: String, values: [String: AnyObject]) {
-        let ref = Database.database().reference().child("users").child(uid)
-        
+        let  ref = Database.database().reference().child("users").child(uid)
         ref.updateChildValues(values, withCompletionBlock: { [weak self] (err, ref) in
             
             if err != nil {
@@ -81,9 +79,16 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
                 return
             }
             self?.messageController?.navigationItem.title = values["name"] as? String
+            self?.messageController?.isStudent = self?.isStudent
+//            print("hey \(self?.messageController?.isStudent)")
+//            self?.messageController?.view.layoutIfNeeded()
+            if let presentingVC = self?.presentingViewController as? CustomTabBarController {
+                presentingVC.isStudent = self?.isStudent
+            } else {
+                print("couldn't down cast custom tab bar controller")
+            }
             self?.dismiss(animated: true, completion: nil)
         })
-        
     }
-    
 }
+

@@ -27,6 +27,15 @@ class CompanyDescriptionTableViewCell: BaseTableViewCell {
         return label
     }()
     
+
+    var editButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "edit500")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override func setupViews() {
         super.setupViews()
         addSubview(titleLabel)
@@ -37,5 +46,11 @@ class CompanyDescriptionTableViewCell: BaseTableViewCell {
         detailLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5).isActive = true
         detailLabel.widthAnchor.constraint(equalTo: widthAnchor, constant: -30).isActive = true
+        
+        addSubview(editButton)
+        editButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
+        editButton.topAnchor.constraint(equalTo: topAnchor, constant: 2).isActive = true
+        editButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        editButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
 }

@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import Firebase
 
 
 
 class ProfileEditCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    
+    var isStudent: Bool?
     
     var cardList = [ProfileCard]()
     var currentEditingType: ProfileCardType?
@@ -33,23 +36,86 @@ class ProfileEditCollectionViewController: UICollectionViewController, UICollect
         let addBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
         let saveBarButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave))
         navigationItem.rightBarButtonItems = [saveBarButton, addBarButton]
-        navigationController?.title = "Edit \(currentEditingType!.rawValue)"
+        navigationItem.title = "Edit \(currentEditingType!.rawValue)"
     }
     
     @objc private func handleAdd() {
         let newCard = ProfileCard(type: currentEditingType!)
-        cardList.append(newCard)
-        collectionView?.reloadData()
-        let section = cardList.count-1
-        let indexPath = IndexPath(item: 0, section: section)
-        collectionView?.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.top, animated: true)
+        if !cardList.contains(newCard) {
+            cardList.append(newCard)
+            collectionView?.reloadData()
+            let section = cardList.count-1
+            let indexPath = IndexPath(item: 0, section: section)
+            collectionView?.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.top, animated: true)
+        } else {
+            print("You can make only one placeholder")
+        }
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     @objc private func handleSave() {
+        guard let uid = Auth.auth().currentUser?.uid, let isstudnet = isStudent else {
+            print("guard has been activated")
+            return
+        }
+
+        var sectionIndicator =  ""
+        if let sectionTitle = cardList[0].type {
+            switch sectionTitle {
+            case .study:
+                sectionIndicator = "study"
+            case .intern:
+                sectionIndicator = "intern"
+            case .language:
+                sectionIndicator = "language"
+            case .skill:
+                sectionIndicator = "skill"
+            }
+        }
+        
         let rootController = navigationController?.viewControllers.first as! ProfileController
-        rootController.cardsList[selectedIndex!] = cardList
-        rootController.tableView.reloadData()
-        navigationController?.popViewController(animated: true)
+        let type = ((cardList[0].type?.rawValue)!).lowercased()
+        let userRef = Database.database().reference().child("users").child(uid).child(type)
+        for i in 0..<cardList.count {
+            if cardList[i].title != nil || cardList[i].detailTitle != nil || cardList[i].startTime != nil || cardList[i].endTime != nil {
+                let childRef = userRef.child("\(type)\(i)")
+                let values = [
+                    "title" : cardList[i].title ?? "",
+                    "subtitle" : cardList[i].detailTitle ?? "",
+                    "startTime" : cardList[i].startTime ?? "",
+                    "endTime" : cardList[i].endTime ?? ""
+                ]
+                
+                childRef.updateChildValues(values) { [weak self] (err, ref) in
+                    if err != nil {
+                        print(err!)
+                        return
+                    }
+                    if let cList = self?.cardList, let index = self?.selectedIndex  {
+                        rootController.cardsList[index] = cList
+                        DispatchQueue.main.async {
+                            rootController.tableView.reloadData()
+                            self?.navigationController?.popViewController(animated: true)
+                        }
+                    }
+                }
+            } else {
+                cardList.remove(at: i)
+                print("at least one element should be filled")
+                rootController.cardsList[selectedIndex!] = cardList
+                rootController.tableView.reloadData()
+                navigationController?.popViewController(animated: true)
+                
+            }
+            
+           
+        }
+
+       
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -83,7 +149,7 @@ class ProfileEditCollectionViewController: UICollectionViewController, UICollect
         let contentList = makeContentList(cell: cell, card: card)
         let contentText = contentList[indexPath.row]
 
-        editVC.navigationItem.title = title
+//        editVC.navigationController?.title = title
         editVC.textInput.placeholder = contentText
         editVC.currentCard = card
         editVC.currentRowNumber = indexPath.row

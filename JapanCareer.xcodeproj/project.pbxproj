@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		3C0C8E3EB4FCA4C9D817A0E9 /* Pods_JapanCareer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7174940307CDA263897307D5 /* Pods_JapanCareer.framework */; };
+		55083687208684C000D54D04 /* EditCompanyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55083686208684C000D54D04 /* EditCompanyDescription.swift */; };
+		550836892086FDF800D54D04 /* HeaderCellWithButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550836882086FDF800D54D04 /* HeaderCellWithButton.swift */; };
 		551ED1A8206D2AC000102E6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1A7206D2AC000102E6C /* AppDelegate.swift */; };
 		551ED1AA206D2AC000102E6C /* MessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1A9206D2AC000102E6C /* MessageController.swift */; };
 		551ED1AD206D2AC000102E6C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 551ED1AB206D2AC000102E6C /* Main.storyboard */; };
 		551ED1B0206D2AC000102E6C /* JapanCareer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1AE206D2AC000102E6C /* JapanCareer.xcdatamodeld */; };
-		551ED1B2206D2AC000102E6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 551ED1B1206D2AC000102E6C /* Assets.xcassets */; };
 		551ED1B5206D2AC000102E6C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 551ED1B3206D2AC000102E6C /* LaunchScreen.storyboard */; };
 		551ED1C0206D491D00102E6C /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1BF206D491D00102E6C /* UserCell.swift */; };
 		552546B62082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift */; };
@@ -38,6 +39,7 @@
 		558F0F51206F2C8200459D94 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 558F0F50206F2C8100459D94 /* GoogleService-Info.plist */; };
 		558F0F53206FEFF500459D94 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558F0F52206FEFF500459D94 /* NewMessageController.swift */; };
 		558FE6BA20781A860062ABDD /* ProfileCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558FE6B920781A860062ABDD /* ProfileCard.swift */; };
+		55A6A8EE20859EBF004D7206 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55A6A8ED20859EBF004D7206 /* Assets.xcassets */; };
 		55B288F8207CECA400C4DB82 /* CompanyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B288F7207CECA400C4DB82 /* CompanyDescription.swift */; };
 		55B7D69D207FF8BD009CBA51 /* ProfileEditCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B7D69C207FF8BD009CBA51 /* ProfileEditCollectionViewController.swift */; };
 		55B7D69F20807A34009CBA51 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B7D69E20807A34009CBA51 /* EditViewController.swift */; };
@@ -56,12 +58,13 @@
 
 /* Begin PBXFileReference section */
 		245FEBC03CE57D709861E3DF /* Pods-JapanCareer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JapanCareer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JapanCareer/Pods-JapanCareer.debug.xcconfig"; sourceTree = "<group>"; };
+		55083686208684C000D54D04 /* EditCompanyDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCompanyDescription.swift; sourceTree = "<group>"; };
+		550836882086FDF800D54D04 /* HeaderCellWithButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCellWithButton.swift; sourceTree = "<group>"; };
 		551ED1A4206D2AC000102E6C /* JapanCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JapanCareer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		551ED1A7206D2AC000102E6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		551ED1A9206D2AC000102E6C /* MessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageController.swift; sourceTree = "<group>"; };
 		551ED1AC206D2AC000102E6C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		551ED1AF206D2AC000102E6C /* JapanCareer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = JapanCareer.xcdatamodel; sourceTree = "<group>"; };
-		551ED1B1206D2AC000102E6C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		551ED1B4206D2AC000102E6C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		551ED1B6206D2AC100102E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		551ED1BF206D491D00102E6C /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
@@ -88,6 +91,7 @@
 		558F0F50206F2C8100459D94 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		558F0F52206FEFF500459D94 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		558FE6B920781A860062ABDD /* ProfileCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCard.swift; sourceTree = "<group>"; };
+		55A6A8ED20859EBF004D7206 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = JapanCareer/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		55B288F7207CECA400C4DB82 /* CompanyDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDescription.swift; sourceTree = "<group>"; };
 		55B7D69C207FF8BD009CBA51 /* ProfileEditCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditCollectionViewController.swift; sourceTree = "<group>"; };
 		55B7D69E20807A34009CBA51 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
@@ -147,13 +151,13 @@
 		551ED1A6206D2AC000102E6C /* JapanCareer */ = {
 			isa = PBXGroup;
 			children = (
+				55A6A8ED20859EBF004D7206 /* Assets.xcassets */,
 				5544FFB8207169C8006204BE /* Helper */,
 				5564DA65206FF513008E1327 /* Model */,
 				55648323206D4EFC0049A1C7 /* Controller */,
 				551ED1BC206D47F000102E6C /* View */,
 				551ED1A7206D2AC000102E6C /* AppDelegate.swift */,
 				551ED1AB206D2AC000102E6C /* Main.storyboard */,
-				551ED1B1206D2AC000102E6C /* Assets.xcassets */,
 				551ED1B3206D2AC000102E6C /* LaunchScreen.storyboard */,
 				551ED1B6206D2AC100102E6C /* Info.plist */,
 				551ED1AE206D2AC000102E6C /* JapanCareer.xcdatamodeld */,
@@ -207,6 +211,7 @@
 				552546C720825A0400F20AE6 /* FooterTableViewCell.swift */,
 				552546C1208258CA00F20AE6 /* HeaderTableViewCell.swift */,
 				552546C52082598F00F20AE6 /* UserDescriptionCell.swift */,
+				550836882086FDF800D54D04 /* HeaderCellWithButton.swift */,
 			);
 			path = ViewsForProfile;
 			sourceTree = "<group>";
@@ -265,6 +270,7 @@
 				55DA86CB2075809B002941F0 /* CompanyProfileViewController.swift */,
 				55DA86C120752848002941F0 /* ListViewController.swift */,
 				552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift */,
+				55083686208684C000D54D04 /* EditCompanyDescription.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -364,9 +370,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				551ED1B5206D2AC000102E6C /* LaunchScreen.storyboard in Resources */,
-				551ED1B2206D2AC000102E6C /* Assets.xcassets in Resources */,
 				551ED1AD206D2AC000102E6C /* Main.storyboard in Resources */,
 				558F0F51206F2C8200459D94 /* GoogleService-Info.plist in Resources */,
+				55A6A8EE20859EBF004D7206 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +453,7 @@
 				55DA86C220752848002941F0 /* ListViewController.swift in Sources */,
 				55DA86CA20757974002941F0 /* UserCardView.swift in Sources */,
 				5564DA69207008C0008E1327 /* RegisterController+handlers.swift in Sources */,
+				55083687208684C000D54D04 /* EditCompanyDescription.swift in Sources */,
 				558F0F4F206EA29300459D94 /* ButtonWithImage.swift in Sources */,
 				551ED1B0206D2AC000102E6C /* JapanCareer.xcdatamodeld in Sources */,
 				552546BF2082566500F20AE6 /* CompanyHeaderCell.swift in Sources */,
@@ -473,6 +480,7 @@
 				55B288F8207CECA400C4DB82 /* CompanyDescription.swift in Sources */,
 				552546C820825A0400F20AE6 /* FooterTableViewCell.swift in Sources */,
 				552546B62082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift in Sources */,
+				550836892086FDF800D54D04 /* HeaderCellWithButton.swift in Sources */,
 				5564DA64206FF140008E1327 /* LoginController.swift in Sources */,
 				55DA86C820754CD4002941F0 /* FilteringMenuCell.swift in Sources */,
 				552546CD20825A7100F20AE6 /* BaseTableViewCell.swift in Sources */,

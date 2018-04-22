@@ -11,6 +11,10 @@ import Firebase
 
 class LoginController: UIViewController {
     
+    var isStudent: Bool {
+        return studentCompanySegmentedControl.selectedSegmentIndex == 0 ? true : false
+    }
+    
     var messageControler: MessageController?
     
     private var backgroundImageView: UIImageView = {
@@ -64,7 +68,7 @@ class LoginController: UIViewController {
         var button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor.mainColor
-        button.setTitle("Register", for: .normal)
+        button.setTitle("Log in", for: .normal)
         button.layer.cornerRadius = 25
         button.layer.masksToBounds = true
         button.layer.borderWidth = 1
@@ -75,23 +79,29 @@ class LoginController: UIViewController {
         return button
     }()
     
+    var studentCompanySegmentedControl: UISegmentedControl = {
+        let sc = UISegmentedControl(items: ["Student", "Company"])
+        sc.translatesAutoresizingMaskIntoConstraints = false
+        sc.tintColor = .white
+        sc.selectedSegmentIndex = 0
+        return sc
+    }()
+    
     @objc private func handleLogin() {
         guard let email = emailInput.textInput.text, let password = passwordInput.textInput.text else {
             print("Form is not valid")
             return
         }
-        
+
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] (user, err) in
             if err != nil {
                 print(err!)
                 return
             }
-//            let messageController = MessageController()
-//            let navController = UINavigationController(rootViewController: messageController)
-            
-//            messageController.fetchUserAndSetUpNavBarTitle()
-            
-            self?.present(CustomTabBarController()
+
+            let customTabBarC = CustomTabBarController()
+            customTabBarC.isStudent = self?.isStudent
+            self?.present(customTabBarC
                 , animated: true, completion: nil)
         }
     }
@@ -107,15 +117,25 @@ class LoginController: UIViewController {
         setupInputFields()
         setupButton()
         setupBackButton()
+        setupSegmentedControl()
         
-        var tap = UITapGestureRecognizer(target: self, action: #selector(handleBack))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleBack))
         backButton.addGestureRecognizer(tap)
-        // Do any additional setup after loading the view.
     }
     
     @objc func handleBack() {
         dismiss(animated: true, completion: nil)
     }
+    
+    
+    private func setupSegmentedControl() {
+        view.addSubview(studentCompanySegmentedControl)
+        studentCompanySegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        studentCompanySegmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 210).isActive = true
+        studentCompanySegmentedControl.widthAnchor.constraint(equalToConstant: 244).isActive = true
+        studentCompanySegmentedControl.heightAnchor.constraint(equalToConstant: 29).isActive = true
+    }
+    
     
     private func setupBackButton() {
         view.addSubview(backButton)
@@ -172,22 +192,3 @@ class LoginController: UIViewController {
     }
     
 }
-
-//extension UIButton {
-//    func selectedButton(title:String, iconName: String, widthConstraints: NSLayoutConstraint){
-//        self.backgroundColor = UIColor(red: 0, green: 118/255, blue: 254/255, alpha: 1)
-//        self.setTitle(title, for: .normal)
-//        self.setTitle(title, for: .highlighted)
-//        self.setTitleColor(UIColor.white, for: .normal)
-//        self.setTitleColor(UIColor.white, for: .highlighted)
-//        self.setImage(UIImage(named: iconName), for: .normal)
-//        self.setImage(UIImage(named: iconName), for: .highlighted)
-//        let imageWidth = self.imageView!.frame.width
-//        let textWidth = (title as NSString).size(withAttributes:[NSAttributedStringKey.font:self.titleLabel!.font!]).width
-//        let width = textWidth + imageWidth + 24
-//        //24 - the sum of your insets from left and right
-//        widthConstraints.constant = width
-//        self.layoutIfNeeded()
-//    }
-//}
-
