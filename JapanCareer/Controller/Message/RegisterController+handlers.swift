@@ -56,8 +56,8 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
                     
                     if let profileImageUrlString = metadata?.downloadURL()?.absoluteString {
                         
-                        let userType = self.isStudent ? "student" : "company"
-                        let values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString, "type": userType]
+//                        let userType = self.isStudent ? "student" : "company"
+                        let values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString]
                         
                         if err != nil {
                             print(err!)
@@ -71,7 +71,9 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     private func registerUserIntoDatabase(with uid: String, values: [String: AnyObject]) {
-        let  ref = Database.database().reference().child("users").child(uid)
+        let userType = self.isStudent ? "student" : "company"
+//        var ref = DatabaseReference()
+        let ref =  Database.database().reference().child("users").child(userType).child(uid)
         ref.updateChildValues(values, withCompletionBlock: { [weak self] (err, ref) in
             
             if err != nil {
@@ -80,8 +82,7 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
             }
             self?.messageController?.navigationItem.title = values["name"] as? String
             self?.messageController?.isStudent = self?.isStudent
-//            print("hey \(self?.messageController?.isStudent)")
-//            self?.messageController?.view.layoutIfNeeded()
+
             if let presentingVC = self?.presentingViewController as? CustomTabBarController {
                 presentingVC.isStudent = self?.isStudent
             } else {

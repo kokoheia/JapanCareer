@@ -11,6 +11,8 @@ import Firebase
 
 class EditViewController: UIViewController, UITextFieldDelegate {
     
+    var isStudent: Bool?
+    
     var currentCard: ProfileCard?
     var currentRowNumber: Int?
     
@@ -64,7 +66,8 @@ class EditViewController: UIViewController, UITextFieldDelegate {
             }
             // if the header is edited
             if let text = textInput.text {
-                let ref = Database.database().reference().child("users").child(uid)
+                let userType = self.isStudent! ? "student" : "company"
+                let ref = Database.database().reference().child("users").child(userType).child(uid)
                 let value = ["name" : text]
                 ref.updateChildValues(value)
             }

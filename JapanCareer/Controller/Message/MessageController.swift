@@ -13,6 +13,11 @@ class MessageController: UITableViewController {
     
     var isStudent: Bool?
     var cellId = "cellId"
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,8 +26,7 @@ class MessageController: UITableViewController {
         tableView.separatorColor = .clear
         checkIfUserLoggedIn()
         observeUserMessage()
-        print(isStudent)
-
+        
     }
     
     private func setupNavigationItem() {
@@ -39,10 +43,9 @@ class MessageController: UITableViewController {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-        
+       
         let ref = Database.database().reference().child("user-messages").child(uid)
         ref.observe(.childAdded, with: { (snapshot) in
-            
             
             let userId = snapshot.key
             Database.database().reference().child("user-messages").child(uid).child(userId).observe(.childAdded, with: { (snapshot) in
@@ -86,12 +89,14 @@ class MessageController: UITableViewController {
     @objc func showChatLogController(user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
-        self.navigationController?.pushViewController(chatLogController, animated: true)
+        navigationController?.pushViewController(chatLogController, animated: true)
     }
     
     @objc private func handleNewMessage() {
         let nmController = NewMessageController()
         nmController.messageController = self
+        nmController.isStudent = isStudent
+//        navigationController?.pushViewController(nmController, animated: true)
         let navController = UINavigationController(rootViewController: nmController)
         present(navController, animated: true, completion: nil)
     }
@@ -100,21 +105,30 @@ class MessageController: UITableViewController {
         if let uid = Auth.auth().currentUser?.uid {
             fetchUserAndSetUpNavBarTitle()
             checkIfUserStudentOrCompany(with: uid)
-            
         } else {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
     }
     
     private func checkIfUserStudentOrCompany(with uid: String) {
-        let ref = Database.database().reference().child("users").child(uid)
-        ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
-//            print(snapshot)
-            if let dictionary = snapshot.value as? [String : AnyObject] {
+        //check if the user is student
+        let studentRef = Database.database().reference().child("users").child("student")
+        studentRef.observe(.childAdded, with: { [weak self] (snapshot) in
+            if snapshot.key == uid {
                 if let rootTabBarC = UIApplication.shared.keyWindow?.rootViewController as? CustomTabBarController {
-                    if let type  = dictionary["type"] as? String {
-                        rootTabBarC.isStudent = type == "student"
-                    }
+                    rootTabBarC.isStudent = true
+                    return
+                }
+            }
+        }, withCancel: nil)
+        
+        //check if the user is company
+        let companyRef = Database.database().reference().child("users").child("company")
+        companyRef.observe(.childAdded, with: { [weak self] (snapshot) in
+            print(snapshot)
+            if snapshot.key == uid {
+                if let rootTabBarC = UIApplication.shared.keyWindow?.rootViewController as? CustomTabBarController {
+                    rootTabBarC.isStudent = false
                 }
             }
         }, withCancel: nil)
@@ -128,17 +142,17 @@ class MessageController: UITableViewController {
         
         var ref = DatabaseReference()
         if isstudent {
-            ref = Database.database().reference().child("users").child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            ref = Database.database().reference().child("users").child("student").child(uid)
+            ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
                 if let dictionary = snapshot.value as? [String : AnyObject]  {
-                    self.navigationItem.title = dictionary["name"] as? String
+                    self?.navigationItem.title = dictionary["name"] as? String
                 }
             })
         } else {
-            ref = Database.database().reference().child("companies").child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            ref = Database.database().reference().child("users").child("company").child(uid)
+            ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
                 if let dictionary = snapshot.value as? [String : AnyObject]  {
-                    self.navigationItem.title = dictionary["name"] as? String
+                    self?.navigationItem.title = dictionary["name"] as? String
                 }
             })
         }
@@ -164,6 +178,8 @@ class MessageController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! UserCell
+        cell.isStudent = isStudent
+
         let message = messages[indexPath.row]
         cell.message = message
         return cell
@@ -176,7 +192,10 @@ class MessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
         if let userId = message.chatPartnerId() {
-            let ref = Database.database().reference().child("users").child(userId)
+            
+            let userType = isStudent! ? "company" : "student"
+            
+            let ref = Database.database().reference().child("users").child(userType).child(userId)
             ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let user = User(dictionary: dictionary)

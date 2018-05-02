@@ -44,12 +44,14 @@ extension CompanyProfileViewController {
         if indexPath.row != currentTabNumber {
             currentTabNumber = indexPath.item
             highlightLeftAnchor?.constant = CGFloat(indexPath.item) * tableView.bounds.width / 3
+
             UIView.animate(withDuration: 0.25, animations: {
                 self.tableView.layoutIfNeeded()
+                
             }) { (finished) in
                 var indexPathes = [IndexPath]()
-                let numberOfContents = self.currentDescriptionViewData.titles?.count
-                for i in 0..<numberOfContents! {
+                let numberOfContents = self.currentDescriptionViewData.count
+                for i in 0..<numberOfContents {
                     indexPathes.append(IndexPath(row: i, section: 1))
                 }
                 DispatchQueue.main.async {

@@ -21,18 +21,15 @@ class ProfileController: UITableViewController {
     let userDescriptionHeaderId = "userDescriptionHeaderId"
     let headerWithButtonId = "headerWithButtonId"
     
-    var studyCard = ProfileCard(type: .study)
-    var internCard = ProfileCard(type: .intern)
-    var skillCard = ProfileCard(type: .skill)
-    var languageCard = ProfileCard(type: .language)
-    
-    lazy var studyCardList: [ProfileCard] = [studyCard]
-    lazy var internCardList: [ProfileCard] = [internCard]
-    lazy var skillCardList: [ProfileCard] = [skillCard]
-    lazy var languageCardList: [ProfileCard] = [languageCard]
     
     
-    lazy var cardsList = [studyCardList, internCardList, skillCardList, languageCardList]
+//    lazy var studyCardList: [ProfileCard] = [studyCard]
+//    lazy var internCardList: [ProfileCard] = [internCard]
+//    lazy var skillCardList: [ProfileCard] = [skillCard]
+//    lazy var languageCardList: [ProfileCard] = [languageCard]
+//
+//
+//    lazy var cardsList = [studyCardList, internCardList, skillCardList, languageCardList]
     
 //    var headerContentsList = ["", ""]
     var user: User?
@@ -67,21 +64,25 @@ class ProfileController: UITableViewController {
         
         navigationItem.title = "Profile"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "ChangeToStudent", style: .plain, target: self, action: #selector(handleChangeToStudent))
-        
         checkUserType()
         setupBackground()
         fetchUser()
     }
     
     private func checkUserType() {
-        if let rootTabBarC = UIApplication.shared.keyWindow?.rootViewController as? CustomTabBarController {
-            isStudent = rootTabBarC.isStudent
+        if isStudent == nil {
+            if let rootTabBarC = UIApplication.shared.keyWindow?.rootViewController as? CustomTabBarController {
+                isStudent = rootTabBarC.isStudent
+            }
         }
     }
     
     @objc private func handleChangeToStudent() {
-        isStudent = !isStudent!
-        tableView?.reloadData()
+//        isStudent = !isStudent!
+//        tableView?.reloadData()
+        let vc = CompanyProfileViewController()
+        vc.isStudent = isStudent!
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 
@@ -92,18 +93,42 @@ class ProfileController: UITableViewController {
     }
 
     private func fetchUser() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("uid or isstudent has been guarded")
+        
+//        if user == nil {
+//            guard let uid = Auth.auth().currentUser?.uid else {
+//                return
+//            }
+//        } else {
+//            guard var uid = user?.id else {
+//                print("uid or isstudent has been guarded")
+//                return
+//            }
+//        }
+//
+
+        guard let uid = user?.id ?? Auth.auth().currentUser?.uid  else {
             return
         }
-        let ref = Database.database().reference().child("users").child(uid)
+        
+        
+     
+        let userType = self.isStudent! ? "student" : "company"
+        let ref = Database.database().reference().child("users").child(userType).child(uid)
+
         ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
+            if let dictionary = snapshot.value as? Dictionary<String, AnyObject> {
+                self?.user = User(dictionary: dictionary)
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+            }
             
-            self?.loadHeaderFromDatabase(ref: ref)
-            self?.loadCardFromDatabase(ref: ref, type: .study)
-            self?.loadCardFromDatabase(ref: ref, type: .intern)
-            self?.loadCardFromDatabase(ref: ref, type: .skill)
-            self?.loadCardFromDatabase(ref: ref, type: .language)
+
+//            self?.loadHeaderFromDatabase(ref: ref)
+//            self?.loadCardFromDatabase(ref: ref, type: .study)
+//            self?.loadCardFromDatabase(ref: ref, type: .intern)
+//            self?.loadCardFromDatabase(ref: ref, type: .skill)
+//            self?.loadCardFromDatabase(ref: ref, type: .language)
         }, withCancel: nil)
     }
     
@@ -111,6 +136,7 @@ class ProfileController: UITableViewController {
         ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
             if let dictionary = snapshot.value as? [String : AnyObject] {
                 let user = User(dictionary: dictionary)
+                user.id = snapshot.key
                 self?.user = user
 //                self.headerContentsList[0] = name
 //
@@ -131,7 +157,7 @@ class ProfileController: UITableViewController {
     private func loadCardFromDatabase(ref: DatabaseReference, type: ProfileCardType) {
         let typeString = (type.rawValue).lowercased()
         let typeRef = ref.child(typeString)
-        var newList: [ProfileCard] = []
+        var tempList: [ProfileCard] = []
         var isFirst = true
         typeRef.observe(.childAdded, with: { [weak self] (snapshot) in
             if let contentsDictionary =  snapshot.value as? [String: String] {
@@ -151,19 +177,17 @@ class ProfileController: UITableViewController {
                 card.detailTitle = contentsDictionary["subtitle"]
                 card.startTime = contentsDictionary["startTime"]
                 card.endTime = contentsDictionary["endTime"]
-                
-                
-                newList.append(card)
-                
+
+                tempList.append(card)
                 switch type {
                 case .study:
-                    self?.cardsList[0] = newList
+                    self?.user?.cardList[0] = tempList
                 case .intern:
-                    self?.cardsList[1] = newList
+                    self?.user?.cardList[1] = tempList
                 case .skill:
-                    self?.cardsList[2] = newList
+                    self?.user?.cardList[2] = tempList
                 case .language:
-                    self?.cardsList[3] = newList
+                    self?.user?.cardList[3] = tempList
                 }
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
@@ -176,8 +200,10 @@ class ProfileController: UITableViewController {
         if section == 0 {
             return 1
         } else {
-            let cardList = cardsList[section-1]
-            return cardList.count + 2
+            if let cardList = user?.cardList[section-1] {
+                return cardList.count + 2
+            }
+            return 1
         }
     }
     
@@ -186,9 +212,10 @@ class ProfileController: UITableViewController {
             return false
         }
         else if indexPath.section >= 1 {
-            let cardList = cardsList[indexPath.section-1]
-            if indexPath.row == 0 || indexPath.row == cardList.count + 1{
-                return false
+            if let cardList = user?.cardList[indexPath.section-1] {
+                if indexPath.row == 0 || indexPath.row == cardList.count + 1{
+                    return false
+                }
             }
         }
         return true
@@ -200,41 +227,42 @@ class ProfileController: UITableViewController {
             return
         }
         
-        var cardList = cardsList[indexPath.section-1]
-        let card = cardList[indexPath.row-1]
-        let typeString = (cardList[0].type!.rawValue).lowercased()
-        let ref = Database.database().reference().child("users").child(uid).child(typeString)
-        ref.observe(.childAdded, with: { (snapshot) in
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let cardInDatabase = ProfileCard(dictionary: dictionary)
-//                print("this is a card info")
-//                card.info()
-//                print("this is a cardIndDatabase info")
-//                cardInDatabase.info()
-                if cardInDatabase == card {
-                    let childKey = snapshot.key
-                    let userRef = ref.child("\(childKey)")
-                    userRef.removeValue { [weak self] (err, ref) in
-                        if err != nil {
-                            print(err!)
-                            return
-                        }
-                        var deleteIndex: Int?
-                        for index in cardList.indices {
-                            let cardInList = cardList[index]
-                            if cardInList == card {
-                                deleteIndex = index
+        if var cardList = user?.cardList[indexPath.section-1] {
+            let card = cardList[indexPath.row-1]
+            let type = cardList[0].type!
+            let typeString = (type.rawValue).lowercased()
+            let userType = self.isStudent! ? "student" : "company"
+            let ref = Database.database().reference().child("users").child(userType).child(uid).child(typeString)
+            ref.observe(.childAdded, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    let cardInDatabase = ProfileCard(dictionary: dictionary, type: type)
+                    if cardInDatabase == card {
+                        let childKey = snapshot.key
+                        let userRef = ref.child("\(childKey)")
+                        userRef.removeValue { [weak self] (err, ref) in
+                            if err != nil {
+                                print(err!)
+                                return
                             }
-                        }
-                        if let dIndex = deleteIndex {
-                            self?.cardsList[indexPath.section-1].remove(at: dIndex)
-                            DispatchQueue.main.async{
-                                tableView.reloadData()
+                            var deleteIndex: Int?
+                            for index in cardList.indices {
+                                let cardInList = cardList[index]
+                                if cardInList == card {
+                                    deleteIndex = index
+                                }
+                            }
+                            if let dIndex = deleteIndex {
+                                self?.user?.cardList[indexPath.section-1].remove(at: dIndex)
+                                DispatchQueue.main.async{
+                                    tableView.reloadData()
+                                }
                             }
                         }
                     }
                 }
-            }
+            }, withCancel: nil)
+        }
+        
 //                let childKey = Array(dictionary)[indexPath.row-1].key
 //                //                print(childKey)
 //                let userRef = ref.child("\(childKey)")
@@ -250,7 +278,7 @@ class ProfileController: UITableViewController {
 //                    }
 //                }
 //            }
-        }, withCancel: nil)
+        
 //        ref.observeSingleEvent(of: .value) { (snapshot) in
 //
 //        }
@@ -267,55 +295,54 @@ class ProfileController: UITableViewController {
             if isstudnet {
                 let cell = tableView.dequeueReusableCell(withIdentifier: headerId, for: indexPath) as! HeaderTableViewCell
                 cell.editButton.addTarget(self, action: #selector(handleEditHeader), for: .touchUpInside)
+                cell.editButton.isUserInteractionEnabled = isStudent! ? true : false
+                cell.editButton.isHidden = isStudent! ? false : true
                 cell.titleLabel.text = user?.name
-                cell.subtitleLabel.text = subtitleDescription
+                cell.subtitleLabel.text = user?.studyList[0].title
                 if let imageUrl = user?.profileImageUrl {
                     cell.profileImageView.loadImageWithCache(with: imageUrl)
                 }
-//                cell.titleLabel.text = headerContentsList[0]
-//                cell.subtitleLabel.text = headerContentsList[1]
-//                let ref = Database.database().reference().child("users").child(uid)
-//                ref.observeSingleEvent(of: .value, with: { (snapshot) in
-//                    if let dictinoary = snapshot.value as? [String: AnyObject] {
-//                        if let name = dictinoary["name"] as? String  {
-//                            cell.titleLabel.text = name
-//                            cell.subtitleLabel.text = ""
-//                        }
-//                    }
-//                }, withCancel: nil)
-                
                 return cell
                 
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: headerWithButtonId, for: indexPath) as! HeaderCellWithButton
                 cell.messageButton.addTarget(self, action: #selector(handleSendMessage), for: .touchUpInside)
-                return cell
-            }
-        } else {
-            var cardList = cardsList[indexPath.section-1]
-
-            if indexPath.row == 0 {
-                let card = cardList[0]
-                let cell = tableView.dequeueReusableCell(withIdentifier: userDescriptionHeaderId, for: indexPath) as! UserDescriptionHeaderCell
-                cell.sectionNameLabel.text = card.type?.rawValue
-                cell.editButton.addTarget(self, action: #selector(handleEdit), for: .touchUpInside)
-                return cell
-                
-            } else if indexPath.row == cardList.count + 1 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: footerId, for: indexPath)
-                return cell
-            } else {
-                let card = cardList[indexPath.row-1]
-                let cell = tableView.dequeueReusableCell(withIdentifier: descriptionId, for: indexPath) as! UserDescriptionCell
-                cell.titleLabel.text = card.title
-                cell.detailLabel.text = card.detailTitle
-                if let startTimeText = card.startTime, let endTimeText = card.endTime, startTimeText != "", endTimeText != ""  {
-                    cell.timeLabel.text = "\(startTimeText)-\(endTimeText)"
-                } else {
-                    cell.timeLabel.text = ""
+                cell.titleLabel.text = user?.name
+                cell.subtitleLabel.text = user?.studyList[0].title
+                if let imageUrl = user?.profileImageUrl {
+                    cell.profileImageView.loadImageWithCache(with: imageUrl)
                 }
                 return cell
             }
+        } else {
+            if var cardList = user?.cardList[indexPath.section-1] {
+                if indexPath.row == 0 {
+                    let card = cardList[0]
+                    let cell = tableView.dequeueReusableCell(withIdentifier: userDescriptionHeaderId, for: indexPath) as! UserDescriptionHeaderCell
+                    cell.sectionNameLabel.text = card.type?.rawValue
+                    cell.editButton.addTarget(self, action: #selector(handleEdit), for: .touchUpInside)
+                    cell.editButton.isUserInteractionEnabled = isStudent! ? true : false
+                    cell.editButton.isHidden = isStudent! ? false : true
+                    
+                    return cell
+                    
+                } else if indexPath.row == cardList.count + 1 {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: footerId, for: indexPath)
+                    return cell
+                } else {
+                    let card = cardList[indexPath.row-1]
+                    let cell = tableView.dequeueReusableCell(withIdentifier: descriptionId, for: indexPath) as! UserDescriptionCell
+                    cell.titleLabel.text = card.title
+                    cell.detailLabel.text = card.detailTitle
+                    if let startTimeText = card.startTime, let endTimeText = card.endTime, startTimeText != "", endTimeText != ""  {
+                        cell.timeLabel.text = "\(startTimeText)-\(endTimeText)"
+                    } else {
+                        cell.timeLabel.text = ""
+                    }
+                    return cell
+                }
+            }
+            return UITableViewCell()
         }
     }
     
@@ -337,12 +364,13 @@ class ProfileController: UITableViewController {
         let collectionVC = ProfileEditCollectionViewController(collectionViewLayout: layout)
         let cell = sender.superview as! UserDescriptionHeaderCell
         if let indexPath = tableView.indexPath(for: cell) {
-            let cardList = cardsList[indexPath.section-1]
-            collectionVC.cardList = cardList
-            collectionVC.selectedIndex = indexPath.section-1
-            collectionVC.currentEditingType = cardList[0].type
-            collectionVC.isStudent = isStudent
-            navigationController?.pushViewController(collectionVC, animated: true)
+            if let cardList = user?.cardList[indexPath.section-1] {
+                collectionVC.cardList = cardList
+                collectionVC.selectedIndex = indexPath.section-1
+                collectionVC.currentEditingType = cardList[0].type
+                collectionVC.isStudent = isStudent
+                navigationController?.pushViewController(collectionVC, animated: true)
+            }
         }
 //        
     }
@@ -358,9 +386,10 @@ class ProfileController: UITableViewController {
             }
             return 275
         } else {
-           let cardList = cardsList[indexPath.section-1]
-            if indexPath.row == 0 || indexPath.row == cardList.count + 1 {
+            if let cardList = user?.cardList[indexPath.section-1] {
+                if indexPath.row == 0 || indexPath.row == cardList.count + 1 {
                     return 50
+                }
             }
             return 92
         }

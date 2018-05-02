@@ -7,15 +7,14 @@
 //
 
 import UIKit
+import Firebase
 
 class CompanyProfileViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var isStudent = false
     
-    lazy var descriptionViewData = [aboutViewData, jobViewData, languageViewData]
-    var aboutViewData = CompanyDescription()
-    var jobViewData = CompanyDescription()
-    var languageViewData = CompanyDescription()
+    var company: Company?
+    
     
     var currentTabNumber = 0
     var companyHeaderId = "companyHeaderId"
@@ -24,10 +23,9 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     var companyDescriptionViewId = "companyDescriptionViewId"
     let cellId = "cellId"
     
-    var currentDescriptionViewData: CompanyDescription {
-        return descriptionViewData[currentTabNumber]
+    var currentDescriptionViewData: [CompanyInfo] {
+        return company?.infoList[currentTabNumber] ?? []
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +38,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         containerCollectionView.selectItem(at: selectedIndexPath, animated: true, scrollPosition: [])
         setupNavBar()
         
-        self.tabBarController?.tabBar.isHidden = true
+//        self.tabBarController?.tabBar.isHidden = true
         tableView.backgroundColor = .white
         
         fetchCompanyData()
@@ -58,7 +56,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     }
     
     private func setupNavBar() {
-        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleChangeTest))
+        let editButton = UIBarButtonItem(title: "Change Mode", style: .plain, target: self, action: #selector(handleChangeTest))
         navigationItem.rightBarButtonItem = editButton
     }
     
@@ -70,25 +68,71 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     @objc private func handleEdit(_ sender: UIButton) {
         let cell = sender.superview as! CompanyDescriptionTableViewCell
         if let indexPath = tableView.indexPath(for: cell) {
-            let ev = EditCompanyDescription()
+            let ev = EditCompanyDescriptionController()
             let currentData = currentDescriptionViewData
-            let title = currentData.titles![indexPath.row]
-            let description = currentData.details![indexPath.row]
+            let title = currentData[indexPath.row].titles
+            let description = currentData[indexPath.row].details
             ev.textInput.text = description
             ev.navigationItem.title = title
             ev.currentIndexPath = indexPath
-            ev.currentTabNum = currentTabNumber
-            navigationController?.pushViewController(ev, animated: true)
+//            ev.currentTabNum = currentTabNumber
+//
+            let layout = UICollectionViewFlowLayout()
+            let companyEditC = CompanyEditController(collectionViewLayout: layout)
+            companyEditC.infoList = currentDescriptionViewData
+            companyEditC.currentTabNumber = currentTabNumber
+            companyEditC.currentIndexPath = indexPath
+            navigationController?.pushViewController(companyEditC, animated: true)
         }
     }
 
     private func fetchCompanyData() {
-        aboutViewData.titles = ["About Company","Vision","Value"]
-        aboutViewData.details =  ["Apple Inc. is an American multinational technology company headquartered in Cupertino, California, that designs, develops, and sells consumer electronics, computer software, and online services. The company's hardware products include the iPhone smartphone, the iPad tablet computer, the Mac personal computer, the iPod portable media player, the Apple Watch smartwatch,the Apple TV digital media player, and the HomePod smart speaker." ,  "We believe that we are on the face of the earth to make great products and that’s not changing. We are constantly focusing on innovating. We believe in the simple not the complex. We believe that we need to own and control the primary technologies behind the products that we make, and participate only in markets where we can make a significant contribution. We believe in saying no to thousands of projects, so that we can really focus on the few that are truly important and meaningful to us.", "Apple is more than just a company because its founding has some of the qualities of myth ... Apple is two guys in a garage undertaking the mission of bringing computing power, once reserved for big corporations, to ordinary individuals with ordinary budgets. The company's growth from two guys to a billion-dollar corporation exemplifies the American Dream."]
-        jobViewData.titles = ["Software Engineer","Product manager","Designer"]
-        jobViewData.details = ["Company's description will come here. This is a sample text. This is a sample text. This is a sample text. This is a sample text. This is a sample text.", "Company's description will come here. This is a sample text. This is a sample text. This is a sample text. This is a sample text. This is a sample text.", "Company's description will come here. This is a sample text. This is a sample text. This is a sample text. This is a sample text. This is a sample text."]
-        languageViewData.titles =  ["Place","Language","Others"]
-        languageViewData.details = ["Company's description will come here. This is a sample text. This is a sample text. This is a sample text. This is a sample text. This is a sample text.", "Company's description will come here. This is a sample text. This is a sample text. This is a sample text. This is a sample text. This is a sample text.", "Company's description will come here. This is a sample text. This is a sample text. This is a sample text. This is a sample text. This is a sample text."]
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("couldn't get uid")
+            return
+        }
+        
+        company = Company()
+        
+        company?.aboutInfo = []
+        company?.jobInfo = []
+        company?.otherInfo = []
+        
+        let ref = Database.database().reference().child("users").child("company").child(uid)
+        ref.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+            if let dictionary = snapshot.value as? [String : AnyObject], let name =  dictionary["name"] as? String, let url = dictionary["profileImageUrl"] as? String {
+                self?.company?.name = name
+                self?.company?.profileImageUrl = url
+            }
+        }
+        
+        let aboutRef = ref.child("about")
+        let jobRef = ref.child("job")
+        let otherRef = ref.child("other")
+        
+        aboutRef.observe(.childAdded, with: { [weak self] (snapshot) in
+            if let dictionary = snapshot.value as? [String: String] {
+                let aboutInfo = CompanyInfo(dictionary: dictionary, type: .about)
+                self?.company?.infoList[0].append(aboutInfo)
+            }
+        }, withCancel: nil)
+
+        jobRef.observe(.childAdded, with: { [weak self] (snapshot) in
+            if let dictionary = snapshot.value as? [String: String] {
+                let jobInfo = CompanyInfo(dictionary: dictionary, type: .job)
+                self?.company?.infoList[1].append(jobInfo)
+            }
+        }, withCancel: nil)
+
+        otherRef.observe(.childAdded, with: { [weak self] (snapshot) in
+            if let dictionary = snapshot.value as? [String: String] {
+                let otherInfo = CompanyInfo(dictionary: dictionary, type: .other)
+                self?.company?.infoList[2].append(otherInfo)
+                DispatchQueue.main.async { [weak self] in
+                    self?.tableView.reloadData()
+                }
+            }
+        }, withCancel: nil)
     }
     
     
@@ -99,9 +143,9 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 2
+            return isStudent ? 2 : 1
         case 1:
-            return currentDescriptionViewData.titles!.count
+            return currentDescriptionViewData.count
         default:
             return 1
         }
@@ -112,6 +156,11 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         case 0:
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: companyHeaderId, for: indexPath) as! CompanyHeaderCell
+                if let name = company?.name, let imageUrlStr = company?.profileImageUrl {
+                    cell.companyNameLabel.text = company?.name
+                    cell.profileImageView.loadImageWithCache(with: imageUrlStr)
+                }
+                
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: buttonCellId, for: indexPath) as! ButtonTableViewCell
@@ -123,8 +172,8 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
            
         case 1 :
             let cell = tableView.dequeueReusableCell(withIdentifier: companyDescriptionId, for: indexPath) as! CompanyDescriptionTableViewCell
-            cell.titleLabel.text = currentDescriptionViewData.titles![indexPath.row]
-            cell.detailLabel.text = currentDescriptionViewData.details![indexPath.row]
+            cell.titleLabel.text = currentDescriptionViewData[indexPath.row].titles
+            cell.detailLabel.text = currentDescriptionViewData[indexPath.row].details
             setupEditButton(with: cell)
             return cell
         default:
@@ -150,7 +199,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
             return 50
         case 1:
             var height: CGFloat = 200
-            if let text = currentDescriptionViewData.details?[indexPath.row] {
+            if let text = currentDescriptionViewData[indexPath.row].details {
                 height = estimatedFrame(for: text).height + 60
             }
 
@@ -194,10 +243,13 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     }()
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        super.tableView(tableView, viewForHeaderInSection: section)
         let view = headerBackgroundView
         setupCollectionViewWithHighLighingView(on: view)
         return view
     }
+    
+    var highlightLeftAnchor: NSLayoutConstraint?
     
     private func setupCollectionViewWithHighLighingView(on view: UIView) {
         view.addSubview(containerCollectionView)
@@ -206,14 +258,13 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         containerCollectionView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         containerCollectionView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        view.addSubview(highlightingView)
-        let constant = CGFloat(currentTabNumber) * tableView.bounds.width / 3
-
-        highlightLeftAnchor =  highlightingView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: constant)
-        highlightLeftAnchor?.isActive = true
-        highlightingView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        highlightingView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/3).isActive = true
-        highlightingView.heightAnchor.constraint(equalToConstant: 4).isActive = true
+//        view.addSubview(highlightingView)
+//
+//        highlightLeftAnchor =  highlightingView.leftAnchor.constraint(equalTo: view.leftAnchor)
+//        highlightLeftAnchor?.isActive = true
+//        highlightingView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+//        highlightingView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/3).isActive = true
+//        highlightingView.heightAnchor.constraint(equalToConstant: 4).isActive = true
     }
 
 

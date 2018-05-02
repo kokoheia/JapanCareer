@@ -40,7 +40,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         messageRef.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary)
-                
                 self?.messages.append(message)
                 DispatchQueue.main.async {
                     self?.collectionView?.reloadData()
@@ -69,7 +68,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     private func setupCell(with cell: ChatMessageCell, message: Message) {
-        if let profileImageUrl = self.user?.profileImageUrl {
+        if let profileImageUrl = user?.profileImageUrl {
             cell.profileImageView.loadImageWithCache(with: profileImageUrl)
         }
         
@@ -228,11 +227,12 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 //        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 58, right: 0)
         collectionView?.backgroundColor = .white
         textInput.delegate = self
-        self.collectionView!.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView!.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .interactive
+        tabBarController?.tabBar.isHidden = true
         
-//        setupViews()
+        setupViews()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

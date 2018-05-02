@@ -7,12 +7,12 @@
 //
 
 import UIKit
+import Firebase
 
-class EditCompanyDescription: UIViewController, UITextViewDelegate {
+class EditCompanyDescriptionController: UIViewController, UITextViewDelegate {
     
-    var currentCard: ProfileCard?
     var currentIndexPath: IndexPath?
-    var currentTabNum: Int?
+    var currentInfo: CompanyInfo?
     
     var currentCompanyDescription: String?
     
@@ -69,6 +69,7 @@ class EditCompanyDescription: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(handleDone))
+        
         setupView()
         
         textInputHeightConstraint?.constant = estimatedFrame(for: textInput.text).height + 50
@@ -76,15 +77,53 @@ class EditCompanyDescription: UIViewController, UITextViewDelegate {
         if textInputHeightConstraint != nil, textInputHeightConstraint!.constant > 250 {
             textInputHeightConstraint?.constant = 250
         }
+        
+    
     }
+
     
     @objc private func handleDone() {
-        if let rootController = navigationController?.viewControllers[1] as? CompanyProfileViewController {
-            let currentData = rootController.currentDescriptionViewData
+//        guard let uid = Auth.auth().currentUser?.uid else {
+//            print("couldn't get current user")
+//            return
+//        }
+//
+//        let ref = Database.database().reference().child("users").child("company").child(uid).child(currentInfo!.type!.rawValue)
+//        let titleString = currentInfo
+//        
+//        let values = [:]
+//        
+//        ref.updateChildValues(<#T##values: [AnyHashable : Any]##[AnyHashable : Any]#>)
+        
+        
+        if let rootController = navigationController?.viewControllers[1] as? CompanyEditController {
+//            let currentData = rootController.currentDescriptionViewData
+            
             if let indexPath = currentIndexPath {
-                currentData.details![indexPath.row] =  textInput.text
-                rootController.tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .none)
+                if currentIndexPath?.row == 0 {
+                    rootController.infoList[indexPath.section].titles = textInput.text
+
+                } else if currentIndexPath?.row == 1 {
+                    rootController.infoList[indexPath.section].details = textInput.text
+                    
+                }
+                rootController.collectionView?.reloadItems(at: [indexPath])
             }
+         
+            
+//
+//
+//            if let type = currentData.type {
+//                let typeStr = type.rawValue
+//                let value = ["title": , "detail": textInput.text]
+//            }
+//
+//
+            
+//            if let indexPath = currentIndexPath {
+//                currentData.details![indexPath.row] =  textInput.text
+//
+//            }
             navigationController?.popViewController(animated: true)
         }
     }
@@ -100,6 +139,8 @@ class EditCompanyDescription: UIViewController, UITextViewDelegate {
     var textInputHeightConstraint: NSLayoutConstraint?
     
     private func setupView() {
+        
+        self.textInput.text = currentCompanyDescription
        
         view.addSubview(textInput)
         textInput.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

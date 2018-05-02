@@ -79,7 +79,8 @@ class ProfileEditCollectionViewController: UICollectionViewController, UICollect
         
         let rootController = navigationController?.viewControllers.first as! ProfileController
         let type = ((cardList[0].type?.rawValue)!).lowercased()
-        let userRef = Database.database().reference().child("users").child(uid).child(type)
+        let userType = self.isStudent! ? "student" : "company"
+        let userRef = Database.database().reference().child("users").child(userType).child(uid).child(type)
         for i in 0..<cardList.count {
             if cardList[i].title != nil || cardList[i].detailTitle != nil || cardList[i].startTime != nil || cardList[i].endTime != nil {
                 let childRef = userRef.child("\(type)\(i)")
@@ -96,7 +97,7 @@ class ProfileEditCollectionViewController: UICollectionViewController, UICollect
                         return
                     }
                     if let cList = self?.cardList, let index = self?.selectedIndex  {
-                        rootController.cardsList[index] = cList
+                        rootController.user?.cardList[index] = cList
                         DispatchQueue.main.async {
                             rootController.tableView.reloadData()
                             self?.navigationController?.popViewController(animated: true)
@@ -106,7 +107,7 @@ class ProfileEditCollectionViewController: UICollectionViewController, UICollect
             } else {
                 cardList.remove(at: i)
                 print("at least one element should be filled")
-                rootController.cardsList[selectedIndex!] = cardList
+                rootController.user?.cardList[selectedIndex!] = cardList
                 rootController.tableView.reloadData()
                 navigationController?.popViewController(animated: true)
                 
@@ -123,7 +124,7 @@ class ProfileEditCollectionViewController: UICollectionViewController, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.bounds.width, height: 40)
+        return CGSize(width: view.bounds.width, height: 56)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -153,6 +154,7 @@ class ProfileEditCollectionViewController: UICollectionViewController, UICollect
         editVC.textInput.placeholder = contentText
         editVC.currentCard = card
         editVC.currentRowNumber = indexPath.row
+        editVC.isStudent = self.isStudent
         navigationController?.pushViewController(editVC, animated: true)
     }
     

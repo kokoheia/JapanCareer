@@ -26,12 +26,15 @@ class ProfileCard: Equatable, NSCopying {
         self.type = type
     }
     
-    convenience init(dictionary: [String: AnyObject]) {
+    convenience init(dictionary: [String: AnyObject], type: ProfileCardType) {
         self.init()
+        self.type = type
         self.title = dictionary["title"] as? String
         self.detailTitle = dictionary["subtitle"] as? String
         self.startTime = dictionary["startTime"] as? String
         self.endTime = dictionary["endTime"] as? String
+        
+        
         
     }
     

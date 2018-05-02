@@ -10,7 +10,7 @@ import UIKit
 
 class CompanyHeaderCell: BaseTableViewCell {
     
-    private var headerImageView: UIImageView = {
+    var headerImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "shrine")
         iv.contentMode = .scaleAspectFill
@@ -19,7 +19,7 @@ class CompanyHeaderCell: BaseTableViewCell {
         return iv
     }()
     
-    private var profileImageView: UIImageView = {
+    var profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "apple-logo2")
         iv.contentMode = .scaleAspectFill
@@ -40,7 +40,7 @@ class CompanyHeaderCell: BaseTableViewCell {
         return view
     }()
     
-    private var companyNameLabel: UILabel = {
+    var companyNameLabel: UILabel = {
         let label = UILabel()
         label.text = "Company A"
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
@@ -48,7 +48,7 @@ class CompanyHeaderCell: BaseTableViewCell {
         return label
     }()
     
-    private var companyPlaceLabel: UILabel = {
+    var companyPlaceLabel: UILabel = {
         let label = UILabel()
         label.text = "Tokyo, Japan"
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
@@ -56,7 +56,7 @@ class CompanyHeaderCell: BaseTableViewCell {
         return label
     }()
     
-    private var companyIndustryLabel: UILabel = {
+    var companyIndustryLabel: UILabel = {
         let label = UILabel()
         label.text = "Software service"
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)

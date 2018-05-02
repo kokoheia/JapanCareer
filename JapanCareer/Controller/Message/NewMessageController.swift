@@ -11,14 +11,16 @@ import Firebase
 
 class NewMessageController: UITableViewController {
     
+    var isStudent: Bool?
     
     private var users = [User]()
     private var cellId = "cellId"
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "cancel", style: .plain, target: self, action: #selector(handleCancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        tabBarController?.tabBar.isHidden = false
         fetchUser()
 
     }
@@ -28,7 +30,9 @@ class NewMessageController: UITableViewController {
     }
     
     private func fetchUser() {
-        let ref = Database.database().reference().child("users")
+        let userType = isStudent! ? "company" : "student"
+        
+        let ref = Database.database().reference().child("users").child(userType)
         ref.observe(.childAdded, with: { [weak self] (snapshot) in
             if let dictionary = snapshot.value as? [String : AnyObject] {
                 let user = User(dictionary: dictionary)
@@ -66,10 +70,10 @@ class NewMessageController: UITableViewController {
     var messageController : MessageController?
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = users[indexPath.row]
         dismiss(animated: true) { [weak self] in
-            self?.messageController?.showChatLogController(user: user)
+            let user = self?.users[indexPath.row]
+            self?.messageController?.showChatLogController(user: user!)
         }
-    } 
+    }
 }
 

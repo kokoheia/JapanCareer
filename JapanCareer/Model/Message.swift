@@ -18,9 +18,7 @@ class Message {
     func chatPartnerId() -> String? {
         return toId == Auth.auth().currentUser?.uid ? fromId : toId
     }
-    
-    
-    
+
     init(dictionary: [String: AnyObject]) {
         self.toId = dictionary["toId"] as? String
         self.fromId = dictionary["fromId"] as? String

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3C0C8E3EB4FCA4C9D817A0E9 /* Pods_JapanCareer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7174940307CDA263897307D5 /* Pods_JapanCareer.framework */; };
-		55083687208684C000D54D04 /* EditCompanyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55083686208684C000D54D04 /* EditCompanyDescription.swift */; };
+		55083687208684C000D54D04 /* EditCompanyDescriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55083686208684C000D54D04 /* EditCompanyDescriptionController.swift */; };
 		550836892086FDF800D54D04 /* HeaderCellWithButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550836882086FDF800D54D04 /* HeaderCellWithButton.swift */; };
 		551ED1A8206D2AC000102E6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1A7206D2AC000102E6C /* AppDelegate.swift */; };
 		551ED1AA206D2AC000102E6C /* MessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1A9206D2AC000102E6C /* MessageController.swift */; };
@@ -40,7 +40,7 @@
 		558F0F53206FEFF500459D94 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558F0F52206FEFF500459D94 /* NewMessageController.swift */; };
 		558FE6BA20781A860062ABDD /* ProfileCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558FE6B920781A860062ABDD /* ProfileCard.swift */; };
 		55A6A8EE20859EBF004D7206 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55A6A8ED20859EBF004D7206 /* Assets.xcassets */; };
-		55B288F8207CECA400C4DB82 /* CompanyDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B288F7207CECA400C4DB82 /* CompanyDescription.swift */; };
+		55B288F8207CECA400C4DB82 /* CompanyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B288F7207CECA400C4DB82 /* CompanyInfo.swift */; };
 		55B7D69D207FF8BD009CBA51 /* ProfileEditCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B7D69C207FF8BD009CBA51 /* ProfileEditCollectionViewController.swift */; };
 		55B7D69F20807A34009CBA51 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B7D69E20807A34009CBA51 /* EditViewController.swift */; };
 		55C8800C2075F43300CDC8A5 /* CustomBarWithDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C8800B2075F43300CDC8A5 /* CustomBarWithDescriptionView.swift */; };
@@ -54,11 +54,14 @@
 		55DA86C820754CD4002941F0 /* FilteringMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DA86C720754CD4002941F0 /* FilteringMenuCell.swift */; };
 		55DA86CA20757974002941F0 /* UserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DA86C920757974002941F0 /* UserCardView.swift */; };
 		55DA86CC2075809B002941F0 /* CompanyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DA86CB2075809B002941F0 /* CompanyProfileViewController.swift */; };
+		55E63F2B2098129C00F39677 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E63F2A2098129C00F39677 /* Company.swift */; };
+		55E63F2D20981E3400F39677 /* CompanyEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E63F2C20981E3300F39677 /* CompanyEditController.swift */; };
+		55F210F2208D636300465379 /* SearchStudentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F210F1208D636200465379 /* SearchStudentCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		245FEBC03CE57D709861E3DF /* Pods-JapanCareer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JapanCareer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JapanCareer/Pods-JapanCareer.debug.xcconfig"; sourceTree = "<group>"; };
-		55083686208684C000D54D04 /* EditCompanyDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCompanyDescription.swift; sourceTree = "<group>"; };
+		55083686208684C000D54D04 /* EditCompanyDescriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCompanyDescriptionController.swift; sourceTree = "<group>"; };
 		550836882086FDF800D54D04 /* HeaderCellWithButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCellWithButton.swift; sourceTree = "<group>"; };
 		551ED1A4206D2AC000102E6C /* JapanCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JapanCareer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		551ED1A7206D2AC000102E6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -92,7 +95,7 @@
 		558F0F52206FEFF500459D94 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		558FE6B920781A860062ABDD /* ProfileCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCard.swift; sourceTree = "<group>"; };
 		55A6A8ED20859EBF004D7206 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = JapanCareer/Assets.xcassets; sourceTree = SOURCE_ROOT; };
-		55B288F7207CECA400C4DB82 /* CompanyDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDescription.swift; sourceTree = "<group>"; };
+		55B288F7207CECA400C4DB82 /* CompanyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyInfo.swift; sourceTree = "<group>"; };
 		55B7D69C207FF8BD009CBA51 /* ProfileEditCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditCollectionViewController.swift; sourceTree = "<group>"; };
 		55B7D69E20807A34009CBA51 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		55C8800B2075F43300CDC8A5 /* CustomBarWithDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBarWithDescriptionView.swift; sourceTree = "<group>"; };
@@ -106,6 +109,9 @@
 		55DA86C720754CD4002941F0 /* FilteringMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringMenuCell.swift; sourceTree = "<group>"; };
 		55DA86C920757974002941F0 /* UserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardView.swift; sourceTree = "<group>"; };
 		55DA86CB2075809B002941F0 /* CompanyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyProfileViewController.swift; sourceTree = "<group>"; };
+		55E63F2A2098129C00F39677 /* Company.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
+		55E63F2C20981E3300F39677 /* CompanyEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyEditController.swift; sourceTree = "<group>"; };
+		55F210F1208D636200465379 /* SearchStudentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStudentCell.swift; sourceTree = "<group>"; };
 		585AEE0D3B25482BC5D156E0 /* Pods-JapanCareer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JapanCareer.release.xcconfig"; path = "Pods/Target Support Files/Pods-JapanCareer/Pods-JapanCareer.release.xcconfig"; sourceTree = "<group>"; };
 		7174940307CDA263897307D5 /* Pods_JapanCareer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JapanCareer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -190,6 +196,7 @@
 				552546BC2082561200F20AE6 /* CollectionViewWithUnderbar.swift */,
 				552546B7208254EB00F20AE6 /* CompanyDescriptionTableViewCell.swift */,
 				552546BA2082558200F20AE6 /* ButtonTableViewCell.swift */,
+				55F210F1208D636200465379 /* SearchStudentCell.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -259,7 +266,8 @@
 				5564DA66206FF51E008E1327 /* User.swift */,
 				55DA86B92071A500002941F0 /* Message.swift */,
 				558FE6B920781A860062ABDD /* ProfileCard.swift */,
-				55B288F7207CECA400C4DB82 /* CompanyDescription.swift */,
+				55B288F7207CECA400C4DB82 /* CompanyInfo.swift */,
+				55E63F2A2098129C00F39677 /* Company.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -270,7 +278,8 @@
 				55DA86CB2075809B002941F0 /* CompanyProfileViewController.swift */,
 				55DA86C120752848002941F0 /* ListViewController.swift */,
 				552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift */,
-				55083686208684C000D54D04 /* EditCompanyDescription.swift */,
+				55083686208684C000D54D04 /* EditCompanyDescriptionController.swift */,
+				55E63F2C20981E3300F39677 /* CompanyEditController.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -450,10 +459,11 @@
 				55B7D69D207FF8BD009CBA51 /* ProfileEditCollectionViewController.swift in Sources */,
 				55C880102076C76400CDC8A5 /* CompanyDescriptionView.swift in Sources */,
 				551ED1C0206D491D00102E6C /* UserCell.swift in Sources */,
+				55E63F2B2098129C00F39677 /* Company.swift in Sources */,
 				55DA86C220752848002941F0 /* ListViewController.swift in Sources */,
 				55DA86CA20757974002941F0 /* UserCardView.swift in Sources */,
 				5564DA69207008C0008E1327 /* RegisterController+handlers.swift in Sources */,
-				55083687208684C000D54D04 /* EditCompanyDescription.swift in Sources */,
+				55083687208684C000D54D04 /* EditCompanyDescriptionController.swift in Sources */,
 				558F0F4F206EA29300459D94 /* ButtonWithImage.swift in Sources */,
 				551ED1B0206D2AC000102E6C /* JapanCareer.xcdatamodeld in Sources */,
 				552546BF2082566500F20AE6 /* CompanyHeaderCell.swift in Sources */,
@@ -477,13 +487,15 @@
 				55C8800C2075F43300CDC8A5 /* CustomBarWithDescriptionView.swift in Sources */,
 				55DA86C4207528A8002941F0 /* ProfileController.swift in Sources */,
 				55DA86BA2071A500002941F0 /* Message.swift in Sources */,
-				55B288F8207CECA400C4DB82 /* CompanyDescription.swift in Sources */,
+				55B288F8207CECA400C4DB82 /* CompanyInfo.swift in Sources */,
+				55F210F2208D636300465379 /* SearchStudentCell.swift in Sources */,
 				552546C820825A0400F20AE6 /* FooterTableViewCell.swift in Sources */,
 				552546B62082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift in Sources */,
 				550836892086FDF800D54D04 /* HeaderCellWithButton.swift in Sources */,
 				5564DA64206FF140008E1327 /* LoginController.swift in Sources */,
 				55DA86C820754CD4002941F0 /* FilteringMenuCell.swift in Sources */,
 				552546CD20825A7100F20AE6 /* BaseTableViewCell.swift in Sources */,
+				55E63F2D20981E3400F39677 /* CompanyEditController.swift in Sources */,
 				5564DA67206FF51E008E1327 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

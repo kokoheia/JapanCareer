@@ -11,6 +11,8 @@ import Firebase
 
 class UserCell: UITableViewCell {
     
+    var isStudent: Bool?
+    
     var message: Message? {
         didSet {
             setupNameAndProfileImage()
@@ -35,7 +37,9 @@ class UserCell: UITableViewCell {
         }
         
         if let id = chatPartnerId {
-            let ref = Database.database().reference().child("users").child(id)
+            var userType = isStudent! ? "company" : "student"
+            
+            let ref = Database.database().reference().child("users").child(userType).child(id)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     self.textLabel?.text = dictionary["name"] as? String
