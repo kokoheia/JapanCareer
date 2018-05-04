@@ -84,7 +84,6 @@ class User: NSObject {
                 }
             }
         }
-        
     }
     
 //    init(profileDictionary: Dictionary<String, AnyObject>, studyDictionary: Dictionary<String, AnyObject>) {

@@ -56,6 +56,8 @@
 		55DA86CC2075809B002941F0 /* CompanyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DA86CB2075809B002941F0 /* CompanyProfileViewController.swift */; };
 		55E63F2B2098129C00F39677 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E63F2A2098129C00F39677 /* Company.swift */; };
 		55E63F2D20981E3400F39677 /* CompanyEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E63F2C20981E3300F39677 /* CompanyEditController.swift */; };
+		55E63F2F209BB26A00F39677 /* CompanyHeaderEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E63F2E209BB26900F39677 /* CompanyHeaderEditController.swift */; };
+		55E63F31209BBA0C00F39677 /* EditCompanyHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E63F30209BBA0C00F39677 /* EditCompanyHeaderViewController.swift */; };
 		55F210F2208D636300465379 /* SearchStudentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F210F1208D636200465379 /* SearchStudentCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -111,6 +113,8 @@
 		55DA86CB2075809B002941F0 /* CompanyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyProfileViewController.swift; sourceTree = "<group>"; };
 		55E63F2A2098129C00F39677 /* Company.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
 		55E63F2C20981E3300F39677 /* CompanyEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyEditController.swift; sourceTree = "<group>"; };
+		55E63F2E209BB26900F39677 /* CompanyHeaderEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyHeaderEditController.swift; sourceTree = "<group>"; };
+		55E63F30209BBA0C00F39677 /* EditCompanyHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCompanyHeaderViewController.swift; sourceTree = "<group>"; };
 		55F210F1208D636200465379 /* SearchStudentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStudentCell.swift; sourceTree = "<group>"; };
 		585AEE0D3B25482BC5D156E0 /* Pods-JapanCareer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JapanCareer.release.xcconfig"; path = "Pods/Target Support Files/Pods-JapanCareer/Pods-JapanCareer.release.xcconfig"; sourceTree = "<group>"; };
 		7174940307CDA263897307D5 /* Pods_JapanCareer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JapanCareer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -280,6 +284,8 @@
 				552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift */,
 				55083686208684C000D54D04 /* EditCompanyDescriptionController.swift */,
 				55E63F2C20981E3300F39677 /* CompanyEditController.swift */,
+				55E63F2E209BB26900F39677 /* CompanyHeaderEditController.swift */,
+				55E63F30209BBA0C00F39677 /* EditCompanyHeaderViewController.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -467,6 +473,7 @@
 				558F0F4F206EA29300459D94 /* ButtonWithImage.swift in Sources */,
 				551ED1B0206D2AC000102E6C /* JapanCareer.xcdatamodeld in Sources */,
 				552546BF2082566500F20AE6 /* CompanyHeaderCell.swift in Sources */,
+				55E63F31209BBA0C00F39677 /* EditCompanyHeaderViewController.swift in Sources */,
 				55DA86CC2075809B002941F0 /* CompanyProfileViewController.swift in Sources */,
 				558FE6BA20781A860062ABDD /* ProfileCard.swift in Sources */,
 				552546C2208258CA00F20AE6 /* HeaderTableViewCell.swift in Sources */,
@@ -496,6 +503,7 @@
 				55DA86C820754CD4002941F0 /* FilteringMenuCell.swift in Sources */,
 				552546CD20825A7100F20AE6 /* BaseTableViewCell.swift in Sources */,
 				55E63F2D20981E3400F39677 /* CompanyEditController.swift in Sources */,
+				55E63F2F209BB26A00F39677 /* CompanyHeaderEditController.swift in Sources */,
 				5564DA67206FF51E008E1327 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

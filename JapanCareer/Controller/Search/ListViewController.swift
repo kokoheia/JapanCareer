@@ -17,6 +17,7 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
     private var studentCellId = "studentCellId"
     
     private var students = [User]()
+    private var companies = [Company]()
     
     private var filteringContainerView: UIView = {
         let view = UIView()
@@ -46,34 +47,34 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
         navigationController?.navigationBar.setBackgroundImage(UINavigationBar.appearance().backgroundImage(for: UIBarMetrics.default), for:UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UINavigationBar.appearance().shadowImage
         navigationItem.title = "Search"
-        let rightBarButtonItem = UIBarButtonItem(title: "change mode", style: .plain, target: self, action: #selector(handleChangeUser))
-        navigationItem.rightBarButtonItem = rightBarButtonItem
+//        let rightBarButtonItem = UIBarButtonItem(title: "change mode", style: .plain, target: self, action: #selector(handleChangeUser))
+//        navigationItem.rightBarButtonItem = rightBarButtonItem
 //        let leftNavBarButton = UIBarButtonItem(customView:searchBar)
 //        navigationItem.leftBarButtonItem = leftNavBarButton
         self.tabBarController?.tabBar.isHidden = false
     }
     
     
-    @objc private func handleChangeUser() {
-        isStudent = !(isStudent!)
-        collectionView?.reloadData()
-    }
-    
+//    @objc private func handleChangeUser() {
+//        isStudent = !(isStudent!)
+//        collectionView?.reloadData()
+//    }
+//
     private func fetchStudents() {
-        let ref = Database.database().reference().child("users").child("student")
-        ref.observe(.childAdded, with: { [weak self] (snapshot) in
-//            print(snapshot)
-            if let dictionary = snapshot.value as? Dictionary<String, AnyObject> {
-                let student = User(dictionary: dictionary)
-                student.id = snapshot.key
-//                print(student.studyList?[0].title)
-                self?.students.append(student)
-//                print(student.studyList)
-                DispatchQueue.main.async {
-                    self?.collectionView?.reloadData()
+        if !isStudent! {
+            let ref = Database.database().reference().child("users").child("student")
+            ref.observe(.childAdded, with: { [weak self] (snapshot) in
+                //            print(snapshot)
+                if let dictionary = snapshot.value as? Dictionary<String, AnyObject> {
+                    let student = User(dictionary: dictionary)
+                    student.id = snapshot.key
+                    self?.students.append(student)
+                    DispatchQueue.main.async {
+                        self?.collectionView?.reloadData()
+                    }
                 }
-            }
-        }, withCancel: nil)
+            }, withCancel: nil)
+        }
     }
 
     override func viewDidLoad() {
@@ -86,6 +87,7 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView?.register(SearchStudentCell.self, forCellWithReuseIdentifier: studentCellId)
         collectionView?.backgroundColor = UIColor.listBackgroundColor
         fetchStudents()
+        fetchCompanies()
 //        collectionView?.contentInset = UIEdgeInsets(top: 38, left: 0, bottom: 0, right: 0)
         
         
@@ -123,6 +125,21 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
 //        languageFilterView.heightAnchor.constraint(equalToConstant: 28).isActive = true
     }
     
+    private func fetchCompanies() {
+        if isStudent! {
+            let ref = Database.database().reference().child("users").child("company")
+            ref.observe(.childAdded, with: { [weak self] (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    let company = Company(dictionary: dictionary)
+                    self?.companies.append(company)
+                    DispatchQueue.main.async {
+                        self?.collectionView?.reloadData()
+                    }
+                }
+            }, withCancel: nil)
+        }
+    }
+    
     private func checkUserType() {
         if let rootTabBarC = UIApplication.shared.keyWindow?.rootViewController as? CustomTabBarController {
             isStudent = rootTabBarC.isStudent
@@ -131,7 +148,7 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isStudent! {
-            return 10
+            return companies.count
             
         } else {
             return students.count
@@ -140,7 +157,23 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if isStudent! {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: companyCellId, for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: companyCellId, for: indexPath) as! UserCardView
+            let company = companies[indexPath.row]
+            if let name = company.name {
+                cell.titleLabel.text = name
+            }
+            if let headerImageUrlStr = company.headerImageUrlStr {
+                cell.userImage.loadImageWithCache(with: headerImageUrlStr)
+            }
+            
+            if let place = company.place {
+                cell.subTitleLabel.text = place
+            }
+            
+            if let aboutDescription = company.aboutInfo[0].details {
+                cell.detailLabel.text = aboutDescription
+            }
+            
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: studentCellId, for: indexPath) as! SearchStudentCell
@@ -162,14 +195,15 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if isStudent! {
-            navigationController?.pushViewController(CompanyProfileViewController(), animated: true)
+            let companyVC = CompanyProfileViewController()
+            companyVC.company = companies[indexPath.item]
+            companyVC.isStudent = isStudent
+            navigationController?.pushViewController(companyVC, animated: true)
         } else {
             let student = students[indexPath.item]
             let vc = ProfileController()
             vc.user = student
-            print(isStudent)
             vc.isStudent = isStudent
-            print(vc.isStudent)
             navigationController?.pushViewController(vc, animated: true)
         }
         

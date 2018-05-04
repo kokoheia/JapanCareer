@@ -11,7 +11,6 @@ import Firebase
 
 extension RegisterController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    
     @objc func handlePickUpImage() {
         let imagePicker = UIImagePickerController()
         
@@ -20,6 +19,7 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
         
         present(imagePicker, animated: true)
     }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var selectedImage : UIImage?
         
@@ -52,18 +52,23 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
             if let profileImage = self.imageView.image, let imageData = UIImageJPEGRepresentation(profileImage, 0.1) {
                 let imageName = NSUUID().uuidString
                 let storageRef = Storage.storage().reference().child("profile-images").child("\(imageName).jpg")
-                storageRef.putData(imageData, metadata: nil, completion: { (metadata, err) in
+                storageRef.putData(imageData, metadata: nil, completion: { [weak self] (metadata, err) in
                     
                     if let profileImageUrlString = metadata?.downloadURL()?.absoluteString {
+                        var values = [String: String]()
                         
+                        if (self?.isStudent)! {
+                            values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString]
+                        } else {
+                            values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString, "headerImageUrl" : profileImageUrlString]
+                        }
 //                        let userType = self.isStudent ? "student" : "company"
-                        let values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString]
                         
                         if err != nil {
                             print(err!)
                             return
                         }
-                        self.registerUserIntoDatabase(with: uid, values: values as [String : AnyObject])
+                        self?.registerUserIntoDatabase(with: uid, values: values as [String : AnyObject])
                     }
                 })
             }

@@ -10,14 +10,16 @@ import UIKit
 
 class UserCardView: UICollectionViewCell {
     
-    private var userImage: UIImageView = {
+    var userImage: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "shrine")
         iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
         return iv
     }()
     
-    private var titleLabel: UILabel = {
+    var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Company A"
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
@@ -25,7 +27,7 @@ class UserCardView: UICollectionViewCell {
         return label
     }()
     
-    private var subTitleLabel: UILabel = {
+    var subTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Tokyo / Japan"
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -34,7 +36,7 @@ class UserCardView: UICollectionViewCell {
         return label
     }()
     
-    private var detailLabel: UILabel = {
+    var detailLabel: UILabel = {
         let label = UILabel()
         label.text = "Company's description will come here. This is a sample text. This is a sample text. This is a sample text. This is a sample text. This is a sample text."
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)

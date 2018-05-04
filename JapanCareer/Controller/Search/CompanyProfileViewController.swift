@@ -9,12 +9,90 @@
 import UIKit
 import Firebase
 
-class CompanyProfileViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class CompanyProfileViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, TableDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    var isStudent = false
+    private var isHeaderImageEditing = false
+    private var isProfileImageEditing = false
+    
+    
+    func handleSetupHeaderImage() {
+        isHeaderImageEditing = true
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        present(imagePicker, animated: true)
+    }
+    
+    func handleSetupProfileImage() {
+        isProfileImageEditing = true
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        present(imagePicker, animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        var selectedImage : UIImage?
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            selectedImage = editedImage
+        } else {
+            selectedImage = info["UIImagePickerControllerOriginalImage"] as? UIImage
+        }
+        
+        let indexPath = IndexPath(row: 0, section: 0)
+        if let cell = tableView.cellForRow(at: indexPath) as? CompanyHeaderCell {
+            if let profileImage = selectedImage, let imageData = UIImageJPEGRepresentation(profileImage, 0.1) {
+                let imageName = NSUUID().uuidString
+                let storageRef = Storage.storage().reference().child("profile-images").child("\(imageName).jpg")
+                storageRef.putData(imageData, metadata: nil, completion: { [weak self] (metadata, err) in
+                    
+                    if let imageUrlString = metadata?.downloadURL()?.absoluteString {
+                        //                        let userType = self.isStudent ? "student" : "company"
+                        var values = [String:String]()
+                        
+                        if (self?.isProfileImageEditing)! {
+                            values = ["profileImageUrl": imageUrlString]
+                             self?.company?.profileImageUrl = imageUrlString
+                        } else if (self?.isHeaderImageEditing)! {
+                            values = ["headerImageUrl": imageUrlString]
+                            self?.company?.headerImageUrlStr = imageUrlString
+                        }
+                        
+                        if err != nil {
+                            print(err!)
+                            return
+                        }
+                        let ref = Database.database().reference().child("users").child("company").child(uid)
+                        ref.updateChildValues(values)
+                       
+                        
+                        DispatchQueue.main.async {
+                            self?.tableView.reloadData()
+                        }
+                        
+                        self?.isProfileImageEditing = false
+                        self?.isHeaderImageEditing = false
+                    }
+                })
+            }
+        } 
+//        let ref = Database.database().reference().child("users").child("comapany").child(uid)
+//        let values = ["profileImageUrl"]
+        
+        dismiss(animated: true, completion: nil)
+    }
+
+    
+    var isStudent: Bool?
     
     var company: Company?
-    
     
     var currentTabNumber = 0
     var companyHeaderId = "companyHeaderId"
@@ -24,7 +102,9 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     let cellId = "cellId"
     
     var currentDescriptionViewData: [CompanyInfo] {
-        return company?.infoList[currentTabNumber] ?? []
+        get {
+            return company?.infoList[currentTabNumber] ?? []
+        }
     }
     
     override func viewDidLoad() {
@@ -36,7 +116,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         tableView.separatorColor = .clear
         let selectedIndexPath = IndexPath(item: 0, section: 0)
         containerCollectionView.selectItem(at: selectedIndexPath, animated: true, scrollPosition: [])
-        setupNavBar()
+//        setupNavBar()
         
 //        self.tabBarController?.tabBar.isHidden = true
         tableView.backgroundColor = .white
@@ -45,7 +125,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     }
     
     private func setupEditButton(with cell: CompanyDescriptionTableViewCell) {
-        if isStudent {
+        if isStudent! {
             cell.editButton.isHidden = true
             cell.editButton.isEnabled = false
         } else {
@@ -55,15 +135,15 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         }
     }
     
-    private func setupNavBar() {
-        let editButton = UIBarButtonItem(title: "Change Mode", style: .plain, target: self, action: #selector(handleChangeTest))
-        navigationItem.rightBarButtonItem = editButton
-    }
-    
-    @objc private func handleChangeTest() {
-        isStudent = !isStudent
-        tableView.reloadData()
-    }
+//    private func setupNavBar() {
+////        let editButton = UIBarButtonItem(title: "Change Mode", style: .plain, target: self, action: #selector(handleChangeTest))
+////        navigationItem.rightBarButtonItem = editButton
+//    }
+//
+//    @objc private func handleChangeTest() {
+//        isStudent = !isStudent!
+//        tableView.reloadData()
+//    }
 
     @objc private func handleEdit(_ sender: UIButton) {
         let cell = sender.superview as! CompanyDescriptionTableViewCell
@@ -75,8 +155,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
             ev.textInput.text = description
             ev.navigationItem.title = title
             ev.currentIndexPath = indexPath
-//            ev.currentTabNum = currentTabNumber
-//
+
             let layout = UICollectionViewFlowLayout()
             let companyEditC = CompanyEditController(collectionViewLayout: layout)
             companyEditC.infoList = currentDescriptionViewData
@@ -87,53 +166,66 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     }
 
     private func fetchCompanyData() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("couldn't get uid")
-            return
-        }
-        
-        company = Company()
-        
-        company?.aboutInfo = []
-        company?.jobInfo = []
-        company?.otherInfo = []
-        
-        let ref = Database.database().reference().child("users").child("company").child(uid)
-        ref.observeSingleEvent(of: .value) { [weak self] (snapshot) in
-            if let dictionary = snapshot.value as? [String : AnyObject], let name =  dictionary["name"] as? String, let url = dictionary["profileImageUrl"] as? String {
-                self?.company?.name = name
-                self?.company?.profileImageUrl = url
+        if !isStudent! {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                print("couldn't get uid")
+                return
             }
-        }
-        
-        let aboutRef = ref.child("about")
-        let jobRef = ref.child("job")
-        let otherRef = ref.child("other")
-        
-        aboutRef.observe(.childAdded, with: { [weak self] (snapshot) in
-            if let dictionary = snapshot.value as? [String: String] {
-                let aboutInfo = CompanyInfo(dictionary: dictionary, type: .about)
-                self?.company?.infoList[0].append(aboutInfo)
-            }
-        }, withCancel: nil)
-
-        jobRef.observe(.childAdded, with: { [weak self] (snapshot) in
-            if let dictionary = snapshot.value as? [String: String] {
-                let jobInfo = CompanyInfo(dictionary: dictionary, type: .job)
-                self?.company?.infoList[1].append(jobInfo)
-            }
-        }, withCancel: nil)
-
-        otherRef.observe(.childAdded, with: { [weak self] (snapshot) in
-            if let dictionary = snapshot.value as? [String: String] {
-                let otherInfo = CompanyInfo(dictionary: dictionary, type: .other)
-                self?.company?.infoList[2].append(otherInfo)
+//            company = Company()
+            let ref = Database.database().reference().child("users").child("company").child(uid)
+            ref.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+                
+//                let aboutRef = ref.child("about")
+//                let jobRef = ref.child("job")
+//                let otherRef = ref.child("other")
+                
+                if let dictionary = snapshot.value as? [String : AnyObject] {
+                    self?.company = Company(dictionary: dictionary)
+                }
+                
                 DispatchQueue.main.async { [weak self] in
                     self?.tableView.reloadData()
                 }
             }
-        }, withCancel: nil)
+            
+            
+            
+//            aboutRef.observe(.childAdded, with: { [weak self] (snapshot) in
+//                if let dictionary = snapshot.value as? [String: String] {
+//                    let aboutInfo = CompanyInfo(dictionary: dictionary, type: .about)
+//                    self?.company?.aboutInfo = []
+//                    self?.company?.infoList[0].append(aboutInfo)
+//                    DispatchQueue.main.async { [weak self] in
+//                        self?.tableView.reloadData()
+//                    }
+//                }
+//                }, withCancel: nil)
+//
+//            jobRef.observe(.childAdded, with: { [weak self] (snapshot) in
+//                if let dictionary = snapshot.value as? [String: String] {
+//                    let jobInfo = CompanyInfo(dictionary: dictionary, type: .job)
+//                    self?.company?.jobInfo = []
+//                    self?.company?.infoList[1].append(jobInfo)
+//                    DispatchQueue.main.async { [weak self] in
+//                        self?.tableView.reloadData()
+//                    }
+//                }
+//                }, withCancel: nil)
+//
+//            otherRef.observe(.childAdded, with: { [weak self] (snapshot) in
+//                if let dictionary = snapshot.value as? [String: String] {
+//                    let otherInfo = CompanyInfo(dictionary: dictionary, type: .other)
+//                    self?.company?.otherInfo = []
+//                    self?.company?.infoList[2].append(otherInfo)
+//                    DispatchQueue.main.async { [weak self] in
+//                        self?.tableView.reloadData()
+//                    }
+//                }
+//            }, withCancel: nil)
+        }
     }
+    
+    
     
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -143,7 +235,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return isStudent ? 2 : 1
+            return isStudent! ? 2 : 1
         case 1:
             return currentDescriptionViewData.count
         default:
@@ -156,9 +248,14 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         case 0:
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: companyHeaderId, for: indexPath) as! CompanyHeaderCell
-                if let name = company?.name, let imageUrlStr = company?.profileImageUrl {
+                cell.editButton.addTarget(self, action: #selector(handleEditHeaderInfo), for: .touchUpInside)
+                cell.delegate = self
+                if let name = company?.name, let profileImageUrlStr = company?.profileImageUrl, let headerImageUrlStr  = company?.headerImageUrlStr {
                     cell.companyNameLabel.text = company?.name
-                    cell.profileImageView.loadImageWithCache(with: imageUrlStr)
+                    cell.companyPlaceLabel.text = company?.place
+                    cell.companyIndustryLabel.text = company?.domain
+                    cell.profileImageView.loadImageWithCache(with: profileImageUrlStr)
+                    cell.headerImageView.loadImageWithCache(with: headerImageUrlStr)
                 }
                 
                 return cell
@@ -187,7 +284,14 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
             sender.backgroundColor = UIColor.applyButtonGreen
             timer.invalidate()
         }
-        print(123)
+        
+    }
+    
+    @objc private func handleEditHeaderInfo() {
+        let layout = UICollectionViewFlowLayout()
+        let editVC = CompanyHeaderEditController(collectionViewLayout: layout)
+        editVC.company = company
+        navigationController?.pushViewController(editVC, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

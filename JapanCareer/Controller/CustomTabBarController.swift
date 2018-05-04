@@ -34,12 +34,11 @@ class CustomTabBarController: UITabBarController {
         //check if the user is company
         let companyRef = Database.database().reference().child("users").child("company")
         companyRef.observe(.childAdded, with: { [weak self] (snapshot) in
-            print(snapshot)
             if snapshot.key == uid {
                 self?.isStudent = false
                 self?.setUpViewControllers()
             }
-            }, withCancel: nil)
+        }, withCancel: nil)
     }
     
     @objc private func handleLogout(){
@@ -75,10 +74,18 @@ class CustomTabBarController: UITabBarController {
         messageNavigationController.tabBarItem.title = "Message"
         messageNavigationController.tabBarItem.image = UIImage(named: "message")
         
-        var pc = UIViewController()
-        pc = isStudent! ? ProfileController() : CompanyProfileViewController()
-        //        pc.isStudent = isStudent
-        let profileNavigationController = UINavigationController(rootViewController: pc)
+        var profileNavigationController = UINavigationController()
+        
+        if isStudent! {
+            let pc = ProfileController()
+            pc.isStudent = isStudent
+            profileNavigationController = UINavigationController(rootViewController: pc)
+        } else {
+            let pc = CompanyProfileViewController()
+            pc.isStudent = isStudent
+            profileNavigationController = UINavigationController(rootViewController: pc)
+        }
+
         profileNavigationController.tabBarItem.title = "Profile"
         profileNavigationController.tabBarItem.image = UIImage(named: "profile")
         

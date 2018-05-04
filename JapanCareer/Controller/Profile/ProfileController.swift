@@ -63,7 +63,7 @@ class ProfileController: UITableViewController {
         
         
         navigationItem.title = "Profile"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "ChangeToStudent", style: .plain, target: self, action: #selector(handleChangeToStudent))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "ChangeToStudent", style: .plain, target: self, action: #selector(handleChangeToStudent))
         checkUserType()
         setupBackground()
         fetchUser()
@@ -77,13 +77,13 @@ class ProfileController: UITableViewController {
         }
     }
     
-    @objc private func handleChangeToStudent() {
-//        isStudent = !isStudent!
-//        tableView?.reloadData()
-        let vc = CompanyProfileViewController()
-        vc.isStudent = isStudent!
-        navigationController?.pushViewController(vc, animated: true)
-    }
+//    @objc private func handleChangeToStudent() {
+////        isStudent = !isStudent!
+////        tableView?.reloadData()
+//        let vc = CompanyProfileViewController()
+//        vc.isStudent = isStudent!
+//        navigationController?.pushViewController(vc, animated: true)
+//    }
     
 
     private func setupBackground() {

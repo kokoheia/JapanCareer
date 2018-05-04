@@ -57,7 +57,7 @@ extension CompanyProfileViewController {
                 DispatchQueue.main.async {
                     UIView.performWithoutAnimation {
                         let contentOffset = self.tableView.contentOffset
-                        self.tableView.reloadRows(at: indexPathes, with: .none)
+                        self.tableView.reloadData()
                         self.tableView.setContentOffset(contentOffset, animated: false)
                     }
                 }

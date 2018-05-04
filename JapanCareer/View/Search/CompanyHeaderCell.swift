@@ -8,18 +8,23 @@
 
 import UIKit
 
-class CompanyHeaderCell: BaseTableViewCell {
+class CompanyHeaderCell: BaseTableViewCell, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    var headerImageView: UIImageView = {
+    var delegate: TableDelegate?
+    
+    lazy var headerImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "shrine")
         iv.contentMode = .scaleAspectFill
         iv.layer.masksToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(pickUpHeaderImage))
+        iv.addGestureRecognizer(tap)
         return iv
     }()
     
-    var profileImageView: UIImageView = {
+    lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "apple-logo2")
         iv.contentMode = .scaleAspectFill
@@ -29,9 +34,20 @@ class CompanyHeaderCell: BaseTableViewCell {
         iv.layer.masksToBounds = true
         iv.layer.borderWidth = 1
         iv.layer.borderColor = UIColor.gray.cgColor
-        
+        iv.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(pickUpProfileImage))
+        iv.addGestureRecognizer(tap)
         return iv
     }()
+    
+    @objc func pickUpProfileImage() {
+        delegate?.handleSetupProfileImage()
+    }
+    
+    @objc func pickUpHeaderImage() {
+        delegate?.handleSetupHeaderImage()
+    }
+    
     
     var descriptionBackground: UIView = {
         let view = UIView()
@@ -42,7 +58,7 @@ class CompanyHeaderCell: BaseTableViewCell {
     
     var companyNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Company A"
+//        label.text = "Company A"
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -50,7 +66,7 @@ class CompanyHeaderCell: BaseTableViewCell {
     
     var companyPlaceLabel: UILabel = {
         let label = UILabel()
-        label.text = "Tokyo, Japan"
+//        label.text = "Tokyo, Japan"
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -58,26 +74,41 @@ class CompanyHeaderCell: BaseTableViewCell {
     
     var companyIndustryLabel: UILabel = {
         let label = UILabel()
-        label.text = "Software service"
+//        label.text = "Software service"
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
+    var editButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "edit500")
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     
     private func setupCompanyBody() {
+        
         contentView.addSubview(descriptionBackground)
         descriptionBackground.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         descriptionBackground.topAnchor.constraint(equalTo: headerImageView.bottomAnchor).isActive = true
         descriptionBackground.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         descriptionBackground.heightAnchor.constraint(equalToConstant: 119).isActive = true
-        
+
         contentView.addSubview(profileImageView)
         profileImageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: headerImageView.bottomAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 92).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 92).isActive = true
+        
+        descriptionBackground.addSubview(editButton)
+        editButton.rightAnchor.constraint(equalTo: descriptionBackground.rightAnchor, constant: -30).isActive = true
+        editButton.topAnchor.constraint(equalTo: descriptionBackground.topAnchor, constant: 30).isActive = true
+        editButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        editButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
         
         descriptionBackground.addSubview(companyNameLabel)
         companyNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -90,7 +121,6 @@ class CompanyHeaderCell: BaseTableViewCell {
         descriptionBackground.addSubview(companyIndustryLabel)
         companyIndustryLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         companyIndustryLabel.topAnchor.constraint(equalTo: companyPlaceLabel.bottomAnchor, constant: 4).isActive = true
-        
     }
     
     private func setupHeader() {
@@ -107,4 +137,9 @@ class CompanyHeaderCell: BaseTableViewCell {
         setupHeader()
         setupCompanyBody()
     }
+}
+
+protocol TableDelegate {
+    func handleSetupProfileImage()
+    func handleSetupHeaderImage()
 }
