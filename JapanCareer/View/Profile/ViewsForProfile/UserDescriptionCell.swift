@@ -20,6 +20,7 @@ class UserDescriptionCell : BaseTableViewCell {
     var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13 + 2, weight: .regular)
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -29,6 +30,7 @@ class UserDescriptionCell : BaseTableViewCell {
         label.font = UIFont.systemFont(ofSize: 13 + 2, weight: .regular)
         label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
         return label
     }()
     
@@ -49,17 +51,20 @@ class UserDescriptionCell : BaseTableViewCell {
         
         addSubview(titleLabel)
         titleLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20).isActive = true
+        
         titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        titleLabel.widthAnchor.constraint(equalToConstant: 230).isActive = true
         
         addSubview(detailLabel)
         detailLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
+        detailLabel.widthAnchor.constraint(equalToConstant: 330).isActive = true
         
         
         addSubview(separatorView)
         separatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        separatorView.widthAnchor.constraint(equalToConstant: 337).isActive = true
+        separatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9).isActive = true
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
     }

@@ -9,9 +9,10 @@
 import UIKit
 import CoreData
 import Firebase
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
@@ -39,8 +40,84 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         navigationBarAppearance.isTranslucent  = false
         navigationBarAppearance.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         navigationBarAppearance.shadowImage = UIImage()
+        
+        attemptRegisterForNotifications(application: application)
 
         return true
+    }
+    
+    func attemptRegisterForNotifications(application: UIApplication) {
+        print("Attempting to register APNS...")
+        
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        
+        //user notifications authorization
+        let options: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { (granted, err) in
+            if let err = err {
+                print("Failed to request auth:", err)
+                return
+            }
+            
+            if granted {
+                print("Auth granted")
+            } else {
+                print("Auth denied")
+            }
+        }
+        
+        
+        application.registerForRemoteNotifications()
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print("Registered for notifications: ", deviceToken)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let userInfo = response.notification.request.content.userInfo
+        
+        if let senderId = userInfo["senderId"] as? String {
+            print(senderId)
+           
+            
+            let ref = Database.database().reference().child("users").child("company").child(senderId)
+                
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    let layout = UICollectionViewFlowLayout()
+                    let chatLogController = ChatLogController(collectionViewLayout: layout)
+                    
+                    let user = User(dictionary: dictionary)
+                    user.id = snapshot.key
+                    chatLogController.user = user
+                    
+                    if let mainTabBarController = self.window?.rootViewController as? CustomTabBarController {
+                        
+                        mainTabBarController.selectedIndex = 0
+                        mainTabBarController.presentedViewController?.dismiss(animated: true, completion: nil)
+                        
+                        if let homeNavigationController = mainTabBarController.viewControllers?.first as? UINavigationController {
+
+                            homeNavigationController.pushViewController(chatLogController, animated: true)
+
+                        }
+                    }
+                }
+            }, withCancel: nil)
+            
+        }
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Registered with FCM with token: ", fcmToken)
+    }
+    
+    //listen for user notifications
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.alert)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

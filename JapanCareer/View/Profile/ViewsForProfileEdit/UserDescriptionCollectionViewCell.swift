@@ -55,7 +55,7 @@ class UserDescriptionCollectionViewCell : BaseCell {
         addSubview(separatorView)
         separatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        separatorView.widthAnchor.constraint(equalToConstant: 337).isActive = true
+        separatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9).isActive = true
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
     }

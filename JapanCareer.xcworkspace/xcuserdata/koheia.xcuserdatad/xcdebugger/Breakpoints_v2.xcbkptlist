@@ -9,88 +9,8 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JapanCareer/Controller/Message/RegisterController+handlers.swift"
-            timestampString = "547078951.920478"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "registerUserIntoDatabase(with:values:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JapanCareer/Controller/Profile/ProfileEditCollectionViewController.swift"
-            timestampString = "546886925.199592"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
-            landmarkName = "handleSave()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JapanCareer/Controller/Profile/ProfileEditCollectionViewController.swift"
-            timestampString = "546886925.199643"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "handleSave()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "JapanCareer.ProfileEditCollectionViewController.(handleSave in _F896A673D0EE9595F91042CD3AC9F5BF)() -&gt; ()"
-                  moduleName = "JapanCareer"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/koheia/Desktop/JapanCareer/JapanCareer/JapanCareer/Controller/Profile/ProfileEditCollectionViewController.swift"
-                  timestampString = "547104853.506809"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "94"
-                  endingLineNumber = "94"
-                  offsetFromSymbolStart = "8819">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;, __ObjC.DatabaseReference) -&gt; () in JapanCareer.ProfileEditCollectionViewController.(handleSave in _F896A673D0EE9595F91042CD3AC9F5BF)() -&gt; ()"
-                  moduleName = "JapanCareer"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/koheia/Desktop/JapanCareer/JapanCareer/JapanCareer/Controller/Profile/ProfileEditCollectionViewController.swift"
-                  timestampString = "547104853.512416"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "94"
-                  endingLineNumber = "94"
-                  offsetFromSymbolStart = "22">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "JapanCareer/Controller/Message/NewMessageController.swift"
-            timestampString = "547078951.927454"
+            timestampString = "547254949.935287"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "74"
@@ -106,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapanCareer/Controller/Search/ListViewController.swift"
-            timestampString = "547104853.330518"
+            timestampString = "547483243.919763"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
             landmarkName = "fetchCompanies()"
             landmarkType = "7">
          </BreakpointContent>
@@ -121,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JapanCareer/Controller/Search/CompanyProfileViewController.swift"
-            timestampString = "547104853.3347321"
+            filePath = "JapanCareer/Controller/Message/RegisterController+handlers.swift"
+            timestampString = "549268618.51604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "imagePickerController(_:didFinishPickingMediaWithInfo:)"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
+            landmarkName = "registerUser()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

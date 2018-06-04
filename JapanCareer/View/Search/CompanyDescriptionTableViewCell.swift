@@ -41,6 +41,7 @@ class CompanyDescriptionTableViewCell: BaseTableViewCell {
         addSubview(titleLabel)
         titleLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
         titleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        titleLabel.widthAnchor.constraint(equalToConstant: 300).isActive = true
         
         addSubview(detailLabel)
         detailLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

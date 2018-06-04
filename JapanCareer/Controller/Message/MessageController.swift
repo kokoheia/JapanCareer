@@ -31,7 +31,6 @@ class MessageController: UITableViewController {
     
     private func setupNavigationItem() {
         navigationItem.title = "Message"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         navigationController?.navigationBar.tintColor = .white
         if !isStudent! {
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(handleNewMessage))
@@ -41,7 +40,7 @@ class MessageController: UITableViewController {
     var messages = [Message]()
     var messageDictionary  = [String : Message]()
     
-    private func observeUserMessage() {
+    func observeUserMessage() {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
@@ -103,7 +102,7 @@ class MessageController: UITableViewController {
         present(navController, animated: true, completion: nil)
     }
     
-    private func checkIfUserLoggedIn() {
+    func checkIfUserLoggedIn() {
         if let uid = Auth.auth().currentUser?.uid {
             fetchUserAndSetUpNavBarTitle()
             checkIfUserStudentOrCompany(with: uid)

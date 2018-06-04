@@ -10,13 +10,7 @@ import UIKit
 import Firebase
 
 class LoginController: UIViewController {
-    
-    var isStudent: Bool {
-        return studentCompanySegmentedControl.selectedSegmentIndex == 0 ? true : false
-    }
-    
-    var messageControler: MessageController?
-    
+        
     private var backgroundImageView: UIImageView = {
         var imageView = UIImageView()
         imageView.image = UIImage(named: "shrine")
@@ -34,13 +28,14 @@ class LoginController: UIViewController {
     
     private var backButton: ButtonWithImage = {
         var button = ButtonWithImage()
+        button.title.text = "Back"
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private var titleText: UILabel = {
         var tv = UILabel()
-        tv.text = "Log in"
+        tv.text = "Log in" 
         tv.textColor = .white
         tv.font = UIFont.systemFont(ofSize: 24, weight: .light)
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -79,30 +74,43 @@ class LoginController: UIViewController {
         return button
     }()
     
-    var studentCompanySegmentedControl: UISegmentedControl = {
-        let sc = UISegmentedControl(items: ["Student", "Company"])
-        sc.translatesAutoresizingMaskIntoConstraints = false
-        sc.tintColor = .white
-        sc.selectedSegmentIndex = 0
-        return sc
-    }()
-    
     @objc private func handleLogin() {
-        guard let email = emailInput.textInput.text, let password = passwordInput.textInput.text else {
+        guard let email = emailInput.textInput.text, let password = passwordInput.textInput.text, !email.isEmpty, !password.isEmpty else {
             print("Form is not valid")
+            self.present(blankAlert, animated: true, completion: nil)
             return
         }
 
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] (user, err) in
             if err != nil {
                 print(err!)
-                return
+                if let alert = self?.missingUserAlert {
+                    self?.present(alert, animated: true, completion: nil)
+                    return
+                }
             }
-
-            let customTabBarC = CustomTabBarController()
-            customTabBarC.isStudent = self?.isStudent
-            self?.present(customTabBarC
-                , animated: true, completion: nil)
+            if let uid = user?.uid {
+                let ref = Database.database().reference().child("users")
+                let studentRef = ref.child("student")
+                studentRef.observe(.childAdded, with: { [weak self] (snapshot) in
+                    if snapshot.key == uid {
+                        let customTabBarC = CustomTabBarController()
+                        customTabBarC.isStudent = true
+                        self?.present(customTabBarC, animated: true, completion: nil)
+                        return
+                    }
+                }, withCancel: nil)
+                
+                let companyRef = ref.child("company")
+                companyRef.observe(.childAdded, with: { (snapshot) in
+                    if snapshot.key == uid {
+                        let customTabBarC = CustomTabBarController()
+                        customTabBarC.isStudent = false
+                        self?.present(customTabBarC, animated: true, completion: nil)
+                        return
+                    }
+                }, withCancel: nil)
+            }
         }
     }
     
@@ -117,26 +125,24 @@ class LoginController: UIViewController {
         setupInputFields()
         setupButton()
         setupBackButton()
-        setupSegmentedControl()
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleBack))
         backButton.addGestureRecognizer(tap)
+        
+        let resignTap = UITapGestureRecognizer(target: self, action: #selector(handleResign))
+        view.addGestureRecognizer(resignTap)
+    }
+    
+    @objc func handleResign() {
+        emailInput.textInput.resignFirstResponder()
+        passwordInput.textInput.resignFirstResponder()
     }
     
     @objc func handleBack() {
         dismiss(animated: true, completion: nil)
     }
     
-    
-    private func setupSegmentedControl() {
-        view.addSubview(studentCompanySegmentedControl)
-        studentCompanySegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        studentCompanySegmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 210).isActive = true
-        studentCompanySegmentedControl.widthAnchor.constraint(equalToConstant: 244).isActive = true
-        studentCompanySegmentedControl.heightAnchor.constraint(equalToConstant: 29).isActive = true
-    }
-    
-    
+
     private func setupBackButton() {
         view.addSubview(backButton)
         backButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 9).isActive = true
@@ -147,8 +153,13 @@ class LoginController: UIViewController {
     
     private func setupTextView() {
         view.addSubview(titleText)
+        
+        if UIDevice.current.modelName == "iPhone 5s" || UIDevice.current.modelName == "iPhone6,1" {
+            titleText.font = UIFont.systemFont(ofSize: 20, weight: .light)
+        }
+        
         titleText.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 132).isActive = true
+        titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 152).isActive = true
     }
     
     private func setupBackgroundImageView() {
@@ -171,13 +182,33 @@ class LoginController: UIViewController {
         view.addSubview(emailInput)
         view.addSubview(passwordInput)
         
+        if UIDevice.current.modelName == "iPhone 5s" || UIDevice.current.modelName == "iPhone6,1" {
+            let fontConstant: CGFloat  = 15
+            emailInput.textInput.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            emailInput.titleLabel.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            passwordInput.textInput.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            passwordInput.titleLabel.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            
+            emailInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            emailInput.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -45).isActive = true
+            emailInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
+            emailInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
+
+            passwordInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            passwordInput.topAnchor.constraint(equalTo: emailInput.bottomAnchor, constant: 37).isActive = true
+            passwordInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
+            passwordInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
+            return
+        }
+        
+        
         emailInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        emailInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -344).isActive = true
+        emailInput.bottomAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         emailInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
         emailInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
         passwordInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        passwordInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -270).isActive = true
+        passwordInput.topAnchor.constraint(equalTo: emailInput.bottomAnchor, constant: 37).isActive = true
         passwordInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
         passwordInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
@@ -185,10 +216,34 @@ class LoginController: UIViewController {
     
     private func setupButton() {
         view.addSubview(registerButton)
+        
+        if UIDevice.current.modelName == "iPhone 5s" || UIDevice.current.modelName == "iPhone6,1" {
+            registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            registerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -127).isActive = true
+            registerButton.widthAnchor.constraint(equalToConstant: 271).isActive = true
+            registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            return
+        }
+        
+        
         registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         registerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -159).isActive = true
         registerButton.widthAnchor.constraint(equalToConstant: 271).isActive = true
         registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
+}
+
+extension LoginController {
+    var blankAlert: UIAlertController {
+        let alert = UIAlertController(title: "Coundn't Log in", message: "Please fill in all the blanks.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+        return alert
+    }
+    
+    var missingUserAlert: UIAlertController {
+        let alert = UIAlertController(title: "Coundn't Log in", message: "The email or password you entered is incorrect", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+        return alert
+    }
 }

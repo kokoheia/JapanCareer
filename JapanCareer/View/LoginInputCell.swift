@@ -23,6 +23,7 @@ class LoginInputCell: UIView, UITextFieldDelegate {
         var textField = UITextField()
         textField.textColor = .white
         textField.textAlignment = .center
+        textField.text = nil
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -72,7 +73,7 @@ class LoginInputCell: UIView, UITextFieldDelegate {
         
         textInput.leftAnchor.constraint(equalTo: titleLabel.rightAnchor).isActive = true
         textInput.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        textInput.widthAnchor.constraint(greaterThanOrEqualToConstant: 255).isActive = true
+        textInput.widthAnchor.constraint(equalToConstant: 240).isActive = true
         textInput.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         underBar.leftAnchor.constraint(equalTo: leftAnchor, constant: 42).isActive = true

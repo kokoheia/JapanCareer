@@ -15,6 +15,7 @@ class CompanyEditController: UICollectionViewController, UICollectionViewDelegat
     var isStudent: Bool?
     var currentTabNumber: Int?
     var currentIndexPath: IndexPath?
+    var currentTitle: String?
     
     var infoList = [CompanyInfo]()
     var currentEditingType: CompanyInfoTitle? {
@@ -24,7 +25,6 @@ class CompanyEditController: UICollectionViewController, UICollectionViewDelegat
     var selectedIndex: Int?
     lazy var originalCardList = infoList
 
-    
     
     private let descriptionViewId = "descriptionViewId"
     private let descriptionViewHeaderId = "descriptionViewHeaderId"
@@ -54,6 +54,7 @@ class CompanyEditController: UICollectionViewController, UICollectionViewDelegat
                 navigationItem.title = "Edit \(typeStr)"
             }
         }
+        
         
     }
     
@@ -123,10 +124,10 @@ class CompanyEditController: UICollectionViewController, UICollectionViewDelegat
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: descriptionViewId, for: indexPath) as! UserDescriptionCollectionViewCell
 
         if indexPath.row == 0 {
-            cell.titleLabel.text = "title"
+            cell.titleLabel.text = "Title"
             cell.textLabel.text = infoList[indexPath.section].titles
         } else if indexPath.row == 1 {
-            cell.titleLabel.text = "detail"
+            cell.titleLabel.text = "Detail"
             cell.textLabel.text = infoList[indexPath.section].details
         }
         
@@ -147,6 +148,7 @@ class CompanyEditController: UICollectionViewController, UICollectionViewDelegat
         editVC.currentCompanyDescription = currentData
         editVC.currentIndexPath = indexPath
         editVC.currentInfo = infoList[indexPath.section]
+        
         navigationController?.pushViewController(editVC, animated: true)
         
     }

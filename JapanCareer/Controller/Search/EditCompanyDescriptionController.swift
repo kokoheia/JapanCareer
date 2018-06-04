@@ -12,8 +12,7 @@ import Firebase
 class EditCompanyDescriptionController: UIViewController, UITextViewDelegate {
     
     var currentIndexPath: IndexPath?
-    var currentInfo: CompanyInfo?
-    
+    var currentInfo: CompanyInfo?    
     var currentCompanyDescription: String?
     
     lazy var textInput: UITextView = {
@@ -64,12 +63,22 @@ class EditCompanyDescriptionController: UIViewController, UITextViewDelegate {
         return view
     }()
     
+    private func titleString(indexPath: IndexPath) -> String{
+        if indexPath.row == 0 {
+            return "Title"
+        } else {
+            return "Detail"
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(handleDone))
-        
+        if let indexPath = currentIndexPath {
+            navigationItem.title = titleString(indexPath: indexPath)
+        }
         setupView()
         
         textInputHeightConstraint?.constant = estimatedFrame(for: textInput.text).height + 50

@@ -9,6 +9,9 @@
 import UIKit
 
 class HeaderTableViewCell: BaseTableViewCell {
+    
+    var delegate: TableDelegate?
+    
     var headerClearView: UIView = {
         let iv = UIView()
         iv.backgroundColor = .clear
@@ -27,13 +30,18 @@ class HeaderTableViewCell: BaseTableViewCell {
     }()
     
     
-    var profileImageView: UIImageView = {
+    lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "origami")
         iv.backgroundColor = .white
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.layer.cornerRadius = 46
         iv.layer.masksToBounds = true
+        iv.isUserInteractionEnabled = true
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleEditProfile))
+        iv.addGestureRecognizer(tap)
         return iv
     }()
     
@@ -42,6 +50,7 @@ class HeaderTableViewCell: BaseTableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Student Name"
         label.font = UIFont.systemFont(ofSize: 17 + 2, weight: .medium)
+        label.textAlignment = .center
         return label
     }()
     
@@ -50,6 +59,7 @@ class HeaderTableViewCell: BaseTableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "University Name"
         label.font = UIFont.systemFont(ofSize: 14 + 2, weight: .regular)
+        label.textAlignment = .center
         return label
     }()
     
@@ -70,6 +80,10 @@ class HeaderTableViewCell: BaseTableViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    @objc private func handleEditProfile() {
+        delegate?.handleSetupProfileImage()
+    }
     
     override func setupViews() {
         super.setupViews()
@@ -97,6 +111,7 @@ class HeaderTableViewCell: BaseTableViewCell {
         addSubview(titleLabel)
         titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 22).isActive = true
+        titleLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9).isActive = true
         
         addSubview(footerView)
         footerView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -107,6 +122,7 @@ class HeaderTableViewCell: BaseTableViewCell {
         addSubview(subtitleLabel)
         subtitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         subtitleLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -30).isActive = true
+        subtitleLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9).isActive = true
         
         addSubview(editButton)
         editButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true

@@ -21,6 +21,7 @@ class CustomTabBarController: UITabBarController {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
     }
+    
     private func checkIfUserStudentOrCompany(with uid: String) {
         //check if the user is student
         let studentRef = Database.database().reference().child("users").child("student")
@@ -90,6 +91,30 @@ class CustomTabBarController: UITabBarController {
         profileNavigationController.tabBarItem.image = UIImage(named: "profile")
         
         viewControllers = [messageNavigationController, listNavigationController,  profileNavigationController]
+    }
+    
+    func refreshUser() {
+        if let messageNavigationController = viewControllers![0] as? UINavigationController {
+            if let messageController = messageNavigationController.viewControllers[0] as? MessageController{
+                messageController.checkIfUserLoggedIn()
+                messageController.observeUserMessage()
+            }
+        }
+        
+        if let listNavigationController = viewControllers![1] as? UINavigationController {
+            if let listController = listNavigationController.viewControllers[0] as? ListViewController {
+                listController.fetchCompanies()
+                listController.fetchStudents()
+            }
+        }
+        
+        if let profileNavigationController =  viewControllers![2] as? UINavigationController {
+            if let profileController = profileNavigationController.viewControllers[0] as? ProfileController {
+                profileController.fetchUser()
+            } else if let profileController = profileNavigationController.viewControllers[0] as? CompanyProfileViewController {
+                profileController.fetchCompanyData()
+            }
+        }
     }
     
     

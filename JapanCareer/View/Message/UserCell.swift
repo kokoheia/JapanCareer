@@ -21,7 +21,19 @@ class UserCell: UITableViewCell {
             if let seconds = message?.timestamp?.doubleValue {
                 let date = Date(timeIntervalSince1970: seconds)
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm:ss a"
+                
+                dateFormatter.dateFormat = "h:mm a"
+                
+                let elapsedTimeInSeconds = NSDate().timeIntervalSince(date)
+                
+                let secondsInDays: TimeInterval = 60 * 60 * 24
+                
+                if elapsedTimeInSeconds > 7 * secondsInDays {
+                    dateFormatter.dateFormat = "MM/dd/yy"
+                } else if elapsedTimeInSeconds > secondsInDays {
+                    dateFormatter.dateFormat = "EEE"
+                }
+
                 timeLabel.text = dateFormatter.string(from: date)
             }
             
@@ -74,7 +86,7 @@ class UserCell: UITableViewCell {
     var timeLabel: UILabel = {
         var label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = UIColor.myGrayColor
         label.textAlignment = .right
         return label
@@ -97,7 +109,7 @@ class UserCell: UITableViewCell {
         profileImageView.heightAnchor.constraint(equalToConstant: 51).isActive = true
         
         addSubview(timeLabel)
-        timeLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -31).isActive = true
+        timeLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         timeLabel.topAnchor.constraint(equalTo: topAnchor, constant: 2).isActive = true
         timeLabel.widthAnchor.constraint(equalToConstant: 99).isActive = true
         timeLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
@@ -106,7 +118,7 @@ class UserCell: UITableViewCell {
         addSubview(separatorLine)
         separatorLine.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         separatorLine.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        separatorLine.widthAnchor.constraint(equalToConstant: 294).isActive = true
+        separatorLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8).isActive = true
         separatorLine.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
         
     }

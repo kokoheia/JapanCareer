@@ -58,25 +58,25 @@ class CompanyHeaderCell: BaseTableViewCell, UIImagePickerControllerDelegate, UIN
     
     var companyNameLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Company A"
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         return label
     }()
     
     var companyPlaceLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Tokyo, Japan"
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         return label
     }()
     
     var companyIndustryLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Software service"
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         return label
     }()
     
@@ -113,14 +113,17 @@ class CompanyHeaderCell: BaseTableViewCell, UIImagePickerControllerDelegate, UIN
         descriptionBackground.addSubview(companyNameLabel)
         companyNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         companyNameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 8).isActive = true
+        companyNameLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9).isActive = true
         
         descriptionBackground.addSubview(companyPlaceLabel)
         companyPlaceLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         companyPlaceLabel.topAnchor.constraint(equalTo: companyNameLabel.bottomAnchor, constant: 4).isActive = true
-        
+        companyNameLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9).isActive = true
+
         descriptionBackground.addSubview(companyIndustryLabel)
         companyIndustryLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         companyIndustryLabel.topAnchor.constraint(equalTo: companyPlaceLabel.bottomAnchor, constant: 4).isActive = true
+        companyNameLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9).isActive = true
     }
     
     private func setupHeader() {

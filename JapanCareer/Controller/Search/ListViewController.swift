@@ -12,6 +12,7 @@ import Firebase
 class ListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
     var isStudent: Bool?
+    var isFiltered = false
     
     private var companyCellId = "companyCellId"
     private var studentCellId = "studentCellId"
@@ -60,7 +61,7 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
 //        collectionView?.reloadData()
 //    }
 //
-    private func fetchStudents() {
+    func fetchStudents() {
         if !isStudent! {
             let ref = Database.database().reference().child("users").child("student")
             ref.observe(.childAdded, with: { [weak self] (snapshot) in
@@ -88,6 +89,7 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView?.backgroundColor = UIColor.listBackgroundColor
         fetchStudents()
         fetchCompanies()
+        setupNavBar()
 //        collectionView?.contentInset = UIEdgeInsets(top: 38, left: 0, bottom: 0, right: 0)
         
         
@@ -125,12 +127,52 @@ class ListViewController: UICollectionViewController, UICollectionViewDelegateFl
 //        languageFilterView.heightAnchor.constraint(equalToConstant: 28).isActive = true
     }
     
-    private func fetchCompanies() {
+    private func setupNavBar() {
+        if !isStudent! {
+            let barButtonItem = UIBarButtonItem(title: "Applying", style: .plain, target: self, action: #selector(handleFilterApplyingStudents))
+            navigationItem.rightBarButtonItem = barButtonItem
+        }
+        
+    }
+    
+    @objc private func handleFilterApplyingStudents() {
+        if !isFiltered {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
+            }
+            students = []
+            let ref = Database.database().reference().child("user-apply").child(uid)
+            ref.observe(.childAdded, with: { (snapshot) in
+                let studentId = snapshot.key
+                let userRef = Database.database().reference().child("users").child("student").child(studentId)
+                userRef.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
+                    if let dictioary = snapshot.value as? [String: AnyObject] {
+                        let student = User(dictionary: dictioary)
+                        student.id = snapshot.key
+                        self?.students.append(student)
+                        DispatchQueue.main.async {
+                            self?.collectionView?.reloadData()
+                            self?.isFiltered = true
+                        }
+                    }
+                    }, withCancel: nil)
+            }, withCancel: nil)
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.students = []
+                self?.fetchStudents()
+                self?.isFiltered = false
+            }
+        }
+    }
+    
+    func fetchCompanies() {
         if isStudent! {
             let ref = Database.database().reference().child("users").child("company")
             ref.observe(.childAdded, with: { [weak self] (snapshot) in
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let company = Company(dictionary: dictionary)
+                    company.id = snapshot.key
                     self?.companies.append(company)
                     DispatchQueue.main.async {
                         self?.collectionView?.reloadData()

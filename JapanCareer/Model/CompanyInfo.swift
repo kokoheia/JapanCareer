@@ -32,6 +32,7 @@ class CompanyInfo: Equatable {
     init(dictionary: [String: String], type: CompanyInfoTitle) {
         self.titles = dictionary["title"]
         self.details = dictionary["detail"]
+        self.type = type
     }
     
     static func == (lhs: CompanyInfo, rhs: CompanyInfo) -> Bool {

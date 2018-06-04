@@ -35,6 +35,7 @@
 		5564DA64206FF140008E1327 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5564DA63206FF140008E1327 /* LoginController.swift */; };
 		5564DA67206FF51E008E1327 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5564DA66206FF51E008E1327 /* User.swift */; };
 		5564DA69207008C0008E1327 /* RegisterController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5564DA68207008C0008E1327 /* RegisterController+handlers.swift */; };
+		557EA6F120A1F4BE00EA1049 /* EditDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557EA6F020A1F4BE00EA1049 /* EditDateViewController.swift */; };
 		558F0F4F206EA29300459D94 /* ButtonWithImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558F0F4E206EA29300459D94 /* ButtonWithImage.swift */; };
 		558F0F51206F2C8200459D94 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 558F0F50206F2C8100459D94 /* GoogleService-Info.plist */; };
 		558F0F53206FEFF500459D94 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558F0F52206FEFF500459D94 /* NewMessageController.swift */; };
@@ -92,6 +93,7 @@
 		5564DA63206FF140008E1327 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		5564DA66206FF51E008E1327 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5564DA68207008C0008E1327 /* RegisterController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RegisterController+handlers.swift"; sourceTree = "<group>"; };
+		557EA6F020A1F4BE00EA1049 /* EditDateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDateViewController.swift; sourceTree = "<group>"; };
 		558F0F4E206EA29300459D94 /* ButtonWithImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonWithImage.swift; sourceTree = "<group>"; };
 		558F0F50206F2C8100459D94 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		558F0F52206FEFF500459D94 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 		55E63F2E209BB26900F39677 /* CompanyHeaderEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyHeaderEditController.swift; sourceTree = "<group>"; };
 		55E63F30209BBA0C00F39677 /* EditCompanyHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCompanyHeaderViewController.swift; sourceTree = "<group>"; };
 		55F210F1208D636200465379 /* SearchStudentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStudentCell.swift; sourceTree = "<group>"; };
+		55FA2B1320B6282C00C3F01A /* JapanCareer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JapanCareer.entitlements; sourceTree = "<group>"; };
 		585AEE0D3B25482BC5D156E0 /* Pods-JapanCareer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JapanCareer.release.xcconfig"; path = "Pods/Target Support Files/Pods-JapanCareer/Pods-JapanCareer.release.xcconfig"; sourceTree = "<group>"; };
 		7174940307CDA263897307D5 /* Pods_JapanCareer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JapanCareer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -161,6 +164,7 @@
 		551ED1A6206D2AC000102E6C /* JapanCareer */ = {
 			isa = PBXGroup;
 			children = (
+				55FA2B1320B6282C00C3F01A /* JapanCareer.entitlements */,
 				55A6A8ED20859EBF004D7206 /* Assets.xcassets */,
 				5544FFB8207169C8006204BE /* Helper */,
 				5564DA65206FF513008E1327 /* Model */,
@@ -296,6 +300,7 @@
 				55DA86C3207528A8002941F0 /* ProfileController.swift */,
 				55B7D69C207FF8BD009CBA51 /* ProfileEditCollectionViewController.swift */,
 				55B7D69E20807A34009CBA51 /* EditViewController.swift */,
+				557EA6F020A1F4BE00EA1049 /* EditDateViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -358,6 +363,11 @@
 					551ED1A3206D2AC000102E6C = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -403,6 +413,7 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-JapanCareer/Pods-JapanCareer-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
@@ -410,6 +421,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -484,6 +496,7 @@
 				552546D320825C0B00F20AE6 /* EditCollectionViewHeaderCell.swift in Sources */,
 				55648325206D4F310049A1C7 /* RegisterController.swift in Sources */,
 				5544FFBA207169E6006204BE /* Extensions.swift in Sources */,
+				557EA6F120A1F4BE00EA1049 /* EditDateViewController.swift in Sources */,
 				55648329206D9A1C0049A1C7 /* LoginInputCell.swift in Sources */,
 				552546C62082598F00F20AE6 /* UserDescriptionCell.swift in Sources */,
 				55DA86B82071818C002941F0 /* ChatLogController.swift in Sources */,
@@ -642,6 +655,7 @@
 			baseConfigurationReference = 245FEBC03CE57D709861E3DF /* Pods-JapanCareer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = JapanCareer/JapanCareer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = V5597WVJA9;
 				INFOPLIST_FILE = JapanCareer/Info.plist;
@@ -658,6 +672,7 @@
 			baseConfigurationReference = 585AEE0D3B25482BC5D156E0 /* Pods-JapanCareer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = JapanCareer/JapanCareer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = V5597WVJA9;
 				INFOPLIST_FILE = JapanCareer/Info.plist;

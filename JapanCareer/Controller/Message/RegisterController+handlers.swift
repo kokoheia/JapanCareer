@@ -34,22 +34,32 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     @objc func handleRegister() {
-
-        guard let name = nameInput.textInput.text,  let email = emailInput.textInput.text, let password = passwordInput.textInput.text else {
-            print("Form is not valid")
+        present(userConfirmAlert, animated: true, completion: nil)
+    }
+    
+    private func registerUser() {
+        guard let name = nameInput.textInput.text,  let email = emailInput.textInput.text, let password = passwordInput.textInput.text, !name.isEmpty, !email.isEmpty, !password.isEmpty else {
+            present(blankAlert, animated: true, completion: nil)
             return
         }
         
-        Auth.auth().createUser(withEmail: email, password: password) { (user, err) in
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] (user, err) in
             if err != nil {
                 print(err!)
+                if let alert = self?.invalidEmailAlert {
+                    self?.present(alert, animated: true, completion: nil)
+                }
                 return
             }
             guard let uid = user?.uid else {
                 print("couldn't catch uid")
                 return
             }
-            if let profileImage = self.imageView.image, let imageData = UIImageJPEGRepresentation(profileImage, 0.1) {
+            
+            guard let fcmToken = Messaging.messaging().fcmToken else {
+                return
+            }
+            if let profileImage = self?.imageView.image, let imageData = UIImageJPEGRepresentation(profileImage, 0.1) {
                 let imageName = NSUUID().uuidString
                 let storageRef = Storage.storage().reference().child("profile-images").child("\(imageName).jpg")
                 storageRef.putData(imageData, metadata: nil, completion: { [weak self] (metadata, err) in
@@ -58,11 +68,10 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
                         var values = [String: String]()
                         
                         if (self?.isStudent)! {
-                            values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString]
+                            values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString, "fcmToken": fcmToken]
                         } else {
-                            values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString, "headerImageUrl" : profileImageUrlString]
+                            values = ["name": name, "email": email, "profileImageUrl": profileImageUrlString, "headerImageUrl" : profileImageUrlString, "fcmToken": fcmToken]
                         }
-//                        let userType = self.isStudent ? "student" : "company"
                         
                         if err != nil {
                             print(err!)
@@ -73,11 +82,11 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
                 })
             }
         }
+
     }
     
     private func registerUserIntoDatabase(with uid: String, values: [String: AnyObject]) {
         let userType = self.isStudent ? "student" : "company"
-//        var ref = DatabaseReference()
         let ref =  Database.database().reference().child("users").child(userType).child(uid)
         ref.updateChildValues(values, withCompletionBlock: { [weak self] (err, ref) in
             
@@ -85,12 +94,15 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
                 print(err!)
                 return
             }
-            self?.messageController?.navigationItem.title = values["name"] as? String
-            self?.messageController?.isStudent = self?.isStudent
+//            self?.messageController?.navigationItem.title = values["name"] as? String
+//            self?.messageController?.isStudent = self?.isStudent
+            
 
             if let presentingVC = self?.presentingViewController as? CustomTabBarController {
                 presentingVC.isStudent = self?.isStudent
-            } else {
+                presentingVC.selectedIndex = 2
+                presentingVC.refreshUser()
+             } else {
                 print("couldn't down cast custom tab bar controller")
             }
             self?.dismiss(animated: true, completion: nil)
@@ -98,3 +110,28 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
     }
 }
 
+
+extension RegisterController {
+    
+    var blankAlert: UIAlertController {
+        let alert = UIAlertController(title: "Coundn't register your account", message: "Please fill in all the blanks.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+        return alert
+    }
+    
+    var invalidEmailAlert: UIAlertController {
+        let alert = UIAlertController(title: "Coundn't register your account", message: "Invalid email address.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: nil))
+        return alert
+    }
+    
+    var userConfirmAlert: UIAlertController {
+        let userString = isStudent ? "student" : "company"
+        let alert = UIAlertController(title: "Are you sure you are a \(userString)?", message: "If you are \(userString) please tap Yes.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] (confirmed) in
+            self?.registerUser()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .default, handler: nil))
+        return alert
+    }
+}

@@ -10,7 +10,7 @@ import UIKit
 
 class ButtonTableViewCell: BaseTableViewCell {
     
-    var cellButton: UIButton = {
+    lazy var cellButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 16

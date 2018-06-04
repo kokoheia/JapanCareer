@@ -19,19 +19,53 @@ class User: NSObject {
     var internCard = ProfileCard(type: .intern)
     var skillCard = ProfileCard(type: .skill)
     var languageCard = ProfileCard(type: .language)
+    var linkCard = ProfileCard(type: .link)
     
     lazy var studyList = [studyCard]
     lazy var internList = [internCard]
     lazy var skillList = [skillCard]
     lazy var languageList = [languageCard]
+    lazy var linkList = [linkCard]
 
     
-//    lazy var studyList = [ProfileCard]()
-//    lazy var internList = [ProfileCard]()
-//    lazy var skillList = [ProfileCard]()
-//    lazy var languageList = [ProfileCard]()
+    lazy var cardList = [studyList, internList, skillList, languageList, linkList]
     
-    lazy var cardList = [studyList, internList, skillList, languageList]
+//    func getCurrentSchool() -> String {
+//        var school:String?
+//        var latestYear = 1000
+//        var latestMonth = 0
+//        for study in studyList {
+//            if let startY = study.startYear {
+//                if startY > latestYear {
+//                    return study.start
+//                }
+//                if startY >= latestYear {
+//                    latestYear = start
+//                    if startM = study.startMonth {
+//                        if startM > latestYear {
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+    
+    func sortCardLists() {
+        cardList[0].sort(by: { (card1, card2) -> Bool in
+            if let timeInt1 = card1.startTimestamp?.intValue, let timeInt2 = card2.startTimestamp?.intValue {
+                return timeInt1 > timeInt2
+            }
+            return true
+        })
+        
+        cardList[1].sort(by: { (card1, card2) -> Bool in
+            if let timeInt1 = card1.startTimestamp?.intValue, let timeInt2 = card2.startTimestamp?.intValue {
+                return timeInt1 > timeInt2
+            }
+            return true
+        })
+    }
 
 
     init(dictionary: Dictionary<String, AnyObject>) {
@@ -84,10 +118,16 @@ class User: NSObject {
                 }
             }
         }
+        
+        if let dict = dictionary["link"] as? Dictionary<String, AnyObject> {
+            if let values = Array(dict.values) as? [Dictionary<String, AnyObject>] {
+                linkList = []
+                for index in values.indices {
+                    let dict = values[index]
+                    let profileCard = ProfileCard(dictionary: dict, type: .link)
+                    linkList.append(profileCard)
+                }
+            }
+        }
     }
-    
-//    init(profileDictionary: Dictionary<String, AnyObject>, studyDictionary: Dictionary<String, AnyObject>) {
-//        self.name = profileDictionary["name"] as? String
-//        self.school = profileDictionary[]
-//    }
 }

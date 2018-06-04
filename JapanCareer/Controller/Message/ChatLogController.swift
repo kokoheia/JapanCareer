@@ -45,7 +45,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                     self?.collectionView?.reloadData()
                 }
             }
-            }, withCancel: nil)
+        }, withCancel: nil)
     }
 
     
@@ -125,7 +125,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         textField.layer.masksToBounds = true
         return textField
     }()
-    
+
     var sendButton : UIButton = {
         var button = UIButton(type: .system)
         let color = UIColor.mainColor
@@ -136,34 +136,43 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         return button
     }()
     
+    
+    
     @objc private func handleSend() {
-        let ref = Database.database().reference().child("messages")
-        let childRef = ref.childByAutoId()
-        let toId = user!.id!
-        let fromId = Auth.auth().currentUser!.uid
-        let timeStamp = Int(Date().timeIntervalSince1970)
-        let value: [String: Any] = ["text": textInput.text!, "toId": toId, "fromId": fromId, "timestamp": timeStamp]
-        childRef.updateChildValues(value) { (err, ref) in
-            if err != nil {
-                print(err!)
-                return
+        if !textInput.text!.isEmpty {
+            let ref = Database.database().reference().child("messages")
+            let childRef = ref.childByAutoId()
+            let toId = user!.id!
+            let fromId = Auth.auth().currentUser!.uid
+            let timeStamp = Int(Date().timeIntervalSince1970)
+            let value: [String: Any] = ["text": textInput.text!, "toId": toId, "fromId": fromId, "timestamp": timeStamp]
+            childRef.updateChildValues(value) { (err, ref) in
+                if err != nil {
+                    print(err!)
+                    return
+                }
+                let userMessageRef = Database.database().reference().child("user-messages").child(fromId).child(toId)
+                let mesageId = childRef.key
+                userMessageRef.updateChildValues([mesageId:1])
+                
+                let recipientUserMessageRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
+                recipientUserMessageRef.updateChildValues([mesageId:1])
             }
-            let userMessageRef = Database.database().reference().child("user-messages").child(fromId).child(toId)
-            let mesageId = childRef.key
-            userMessageRef.updateChildValues([mesageId:1])
-            
-            let recipientUserMessageRef = Database.database().reference().child("user-messages").child(toId).child(fromId)
-            recipientUserMessageRef.updateChildValues([mesageId:1])
         }
-        
     }
     
+//    var inputContainerViewHeightConstant: CGFloat = 49
     
     
     lazy var inputContainerView: UIView = {
         let containerView = UIView()
         containerView.backgroundColor = .white
-        containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 49)
+        
+        if UIDevice.current.modelName == "iPhone X" || UIDevice.current.modelName == "iPhone10,3" {
+            containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 69)
+        } else {
+            containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 49)
+        }
         
         var sendButton = UIButton(type: .system)
         let color = UIColor.mainColor
@@ -182,12 +191,16 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
 
         
         textInput.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 14).isActive = true
-        textInput.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        textInput.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 6).isActive = true
         textInput.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -67).isActive = true
         textInput.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -16).isActive = true
-        sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        if UIDevice.current.modelName == "iPhone X" || UIDevice.current.modelName == "iPhone10,3" {
+            sendButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 15).isActive = true
+        } else {
+            sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        }
         sendButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         sendButton.heightAnchor.constraint(equalToConstant: 19).isActive = true
         
@@ -204,7 +217,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             return inputContainerView
         }
     }
-    
+
     override var canBecomeFirstResponder: Bool {
         return true
     }
@@ -229,14 +242,98 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         textInput.delegate = self
         collectionView!.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.alwaysBounceVertical = true
-        collectionView?.keyboardDismissMode = .interactive
+//        collectionView?.keyboardDismissMode = .interactive
         tabBarController?.tabBar.isHidden = true
         
         setupViews()
+//        setupInputComponents()
+//        setupKeyboardObservers()
     }
+    
+    var containerViewBottomAnchor: NSLayoutConstraint?
+    
+//    private func setupInputComponents() {
+//        let containerView = UIView()
+//        containerView.backgroundColor = .white
+//        containerView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        view.addSubview(containerView)
+//
+//        containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        containerViewBottomAnchor = containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        containerViewBottomAnchor?.isActive = true
+//        containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+//        containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//
+//        var sendButton = UIButton(type: .system)
+//        let color = UIColor.mainColor
+//        let attributedString = NSAttributedString(string: "Send", attributes: [.font : UIFont.systemFont(ofSize: 16, weight: .medium), .foregroundColor: color])
+//        sendButton.setAttributedTitle(attributedString, for: .normal)
+//        sendButton.translatesAutoresizingMaskIntoConstraints = false
+//        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
+//
+//        var separatorLine = UIView()
+//        separatorLine.backgroundColor = UIColor.myLightGrayColor
+//        separatorLine.translatesAutoresizingMaskIntoConstraints = false
+//
+//        containerView.addSubview(textInput)
+//        containerView.addSubview(sendButton)
+//        containerView.addSubview(separatorLine)
+//
+//        textInput.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 14).isActive = true
+//        textInput.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 6).isActive = true
+//        textInput.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -67).isActive = true
+//        textInput.heightAnchor.constraint(equalToConstant: 36).isActive = true
+//
+//        sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -16).isActive = true
+//        if UIDevice.current.modelName == "iPhone X" || UIDevice.current.modelName == "iPhone10,3" {
+//            sendButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 15).isActive = true
+//        } else {
+//            sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+//        }
+//        sendButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        sendButton.heightAnchor.constraint(equalToConstant: 19).isActive = true
+//
+//        separatorLine.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+//        separatorLine.bottomAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
+//        separatorLine.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
+//        separatorLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
+//    }
+    
+//    private func setupKeyboardObservers() {
+//        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+//
+//        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+//    }
+//
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        NotificationCenter.default.removeObserver(self)
+//    }
+    
+    
+//    @objc private func handleKeyboardWillShow(notification: NSNotification) {
+//        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
+//        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+//        containerViewBottomAnchor?.constant = -keyboardFrame!.height
+//        UIView.animate(withDuration: keyboardDuration!) { [weak self] in
+//            self?.view.layoutIfNeeded()
+//        }
+//    }
+//
+//    @objc private func handleKeyboardWillHide(notification: NSNotification) {
+//        let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
+//        containerViewBottomAnchor?.constant = 0
+//        UIView.animate(withDuration: keyboardDuration!) { [weak self] in
+//            self?.view.layoutIfNeeded()
+//        }
+//    }
+
+    
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         handleSend()
+        textField.text = ""
         return true
     }
 
@@ -282,3 +379,5 @@ class CustomTextField: UITextField {
         return UIEdgeInsetsInsetRect(bounds, UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0))
     }
 }
+
+

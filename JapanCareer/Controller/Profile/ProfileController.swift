@@ -11,33 +11,21 @@ import Firebase
 
 let cardCornerRadius: CGFloat = 20
 
-class ProfileController: UITableViewController {
-    
-    var isStudent: Bool?
-    
+class ProfileController: UITableViewController, TableDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
     let headerId = "headerId"
     let descriptionId = "descriptionId"
     let footerId = "footerId"
     let userDescriptionHeaderId = "userDescriptionHeaderId"
     let headerWithButtonId = "headerWithButtonId"
     
-    
-    
-//    lazy var studyCardList: [ProfileCard] = [studyCard]
-//    lazy var internCardList: [ProfileCard] = [internCard]
-//    lazy var skillCardList: [ProfileCard] = [skillCard]
-//    lazy var languageCardList: [ProfileCard] = [languageCard]
-//
-//
-//    lazy var cardsList = [studyCardList, internCardList, skillCardList, languageCardList]
-    
-//    var headerContentsList = ["", ""]
+    var isStudent: Bool?
     var user: User?
     var subtitleDescription: String?
     
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return ProfileCardType.count + 1
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -48,9 +36,7 @@ class ProfileController: UITableViewController {
         let view = UIView()
         return view
     }
-    
- 
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,12 +47,78 @@ class ProfileController: UITableViewController {
         tableView.register(HeaderCellWithButton.self, forCellReuseIdentifier: headerWithButtonId)
         tableView.separatorStyle = .none
         
-        
+        if isStudent! {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        }
+
         navigationItem.title = "Profile"
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "ChangeToStudent", style: .plain, target: self, action: #selector(handleChangeToStudent))
         checkUserType()
         setupBackground()
         fetchUser()
+    }
+    
+    @objc private func handleLogout(){
+        do {
+            try Auth.auth().signOut()
+        } catch let logoutError {
+            print(logoutError)
+            return
+        }
+        
+        let loginVC = RegisterController()
+        present(loginVC, animated: true, completion: nil)
+    }
+
+    func handleSetupProfileImage() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        present(imagePicker, animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        var selectedImage : UIImage?
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            selectedImage = editedImage
+        } else {
+            selectedImage = info["UIImagePickerControllerOriginalImage"] as? UIImage
+        }
+        
+        let indexPath = IndexPath(row: 0, section: 0)
+        
+        if let profileImage = selectedImage, let imageData = UIImageJPEGRepresentation(profileImage, 0.1) {
+            let imageName = NSUUID().uuidString
+            let storageRef = Storage.storage().reference().child("profile-images").child("\(imageName).jpg")
+            storageRef.putData(imageData, metadata: nil, completion: { [weak self] (metadata, err) in
+                
+                if err != nil {
+                    print(err!)
+                    return
+                }
+                
+                if let imageUrlString = metadata?.downloadURL()?.absoluteString {
+                    let values = ["profileImageUrl": imageUrlString]
+                    self?.user?.profileImageUrl = imageUrlString
+                    
+                    let ref = Database.database().reference().child("users").child("student").child(uid)
+                    ref.updateChildValues(values)
+                    
+                    DispatchQueue.main.async {
+                        self?.tableView.reloadData()
+                    }
+                }
+            })
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    func handleSetupHeaderImage() {
+        return
     }
     
     private func checkUserType() {
@@ -76,60 +128,31 @@ class ProfileController: UITableViewController {
             }
         }
     }
-    
-//    @objc private func handleChangeToStudent() {
-////        isStudent = !isStudent!
-////        tableView?.reloadData()
-//        let vc = CompanyProfileViewController()
-//        vc.isStudent = isStudent!
-//        navigationController?.pushViewController(vc, animated: true)
-//    }
-    
-
     private func setupBackground() {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "bg-texture")
         tableView.backgroundView = imageView
     }
 
-    private func fetchUser() {
-        
-//        if user == nil {
-//            guard let uid = Auth.auth().currentUser?.uid else {
-//                return
-//            }
-//        } else {
-//            guard var uid = user?.id else {
-//                print("uid or isstudent has been guarded")
-//                return
-//            }
-//        }
-//
-
-        guard let uid = user?.id ?? Auth.auth().currentUser?.uid  else {
-            return
-        }
-        
-        
-     
-        let userType = self.isStudent! ? "student" : "company"
-        let ref = Database.database().reference().child("users").child(userType).child(uid)
-
-        ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
-            if let dictionary = snapshot.value as? Dictionary<String, AnyObject> {
-                self?.user = User(dictionary: dictionary)
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
+    func fetchUser() {
+        if user == nil {
+            guard let uid = user?.id ?? Auth.auth().currentUser?.uid  else {
+                return
             }
             
-
-//            self?.loadHeaderFromDatabase(ref: ref)
-//            self?.loadCardFromDatabase(ref: ref, type: .study)
-//            self?.loadCardFromDatabase(ref: ref, type: .intern)
-//            self?.loadCardFromDatabase(ref: ref, type: .skill)
-//            self?.loadCardFromDatabase(ref: ref, type: .language)
-        }, withCancel: nil)
+            let userType = self.isStudent! ? "student" : "company"
+            let ref = Database.database().reference().child("users").child(userType).child(uid)
+            
+            ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
+                if let dictionary = snapshot.value as? Dictionary<String, AnyObject> {
+                    self?.user = User(dictionary: dictionary)
+                    self?.user?.sortCardLists()
+                    DispatchQueue.main.async {
+                        self?.tableView.reloadData()
+                    }
+                }
+            }, withCancel: nil)
+        }
     }
     
     private func loadHeaderFromDatabase(ref: DatabaseReference) {
@@ -138,15 +161,6 @@ class ProfileController: UITableViewController {
                 let user = User(dictionary: dictionary)
                 user.id = snapshot.key
                 self?.user = user
-//                self.headerContentsList[0] = name
-//
-//
-//                if let name = dictionary["name"] as? String {
-//                    self.headerContentsList[0] = name
-//                }
-//                if let url = dictionary["profileImageUrl"] as? String {
-//
-//                }
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                 }
@@ -154,47 +168,6 @@ class ProfileController: UITableViewController {
         }, withCancel: nil)
     }
     
-    private func loadCardFromDatabase(ref: DatabaseReference, type: ProfileCardType) {
-        let typeString = (type.rawValue).lowercased()
-        let typeRef = ref.child(typeString)
-        var tempList: [ProfileCard] = []
-        var isFirst = true
-        typeRef.observe(.childAdded, with: { [weak self] (snapshot) in
-            if let contentsDictionary =  snapshot.value as? [String: String] {
-                
-                //set a school name in the header
-                if type == .study, isFirst {
-                    isFirst = false
-                    self?.subtitleDescription = contentsDictionary["title"]
-//                    if let title = {
-//
-////                        self.headerContentsList[1] = title
-//                    }
-                }
-                
-                let card = ProfileCard(type: type)
-                card.title = contentsDictionary["title"]
-                card.detailTitle = contentsDictionary["subtitle"]
-                card.startTime = contentsDictionary["startTime"]
-                card.endTime = contentsDictionary["endTime"]
-
-                tempList.append(card)
-                switch type {
-                case .study:
-                    self?.user?.cardList[0] = tempList
-                case .intern:
-                    self?.user?.cardList[1] = tempList
-                case .skill:
-                    self?.user?.cardList[2] = tempList
-                case .language:
-                    self?.user?.cardList[3] = tempList
-                }
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
-            }
-        }, withCancel: nil)
-    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
@@ -262,26 +235,6 @@ class ProfileController: UITableViewController {
                 }
             }, withCancel: nil)
         }
-        
-//                let childKey = Array(dictionary)[indexPath.row-1].key
-//                //                print(childKey)
-//                let userRef = ref.child("\(childKey)")
-//                userRef.removeValue { (err, ref) in
-//                    if err != nil {
-//                        print(err!)
-//                        return
-//                    }
-//                    //                    print(self.cardsList[indexPath.section-1])
-//                    self.cardsList[indexPath.section-1].remove(at: indexPath.row-1)
-//                    DispatchQueue.main.async{
-//                        tableView.reloadData()
-//                    }
-//                }
-//            }
-        
-//        ref.observeSingleEvent(of: .value) { (snapshot) in
-//
-//        }
     }
     
     
@@ -297,8 +250,11 @@ class ProfileController: UITableViewController {
                 cell.editButton.addTarget(self, action: #selector(handleEditHeader), for: .touchUpInside)
                 cell.editButton.isUserInteractionEnabled = isStudent! ? true : false
                 cell.editButton.isHidden = isStudent! ? false : true
+                cell.profileImageView.isUserInteractionEnabled = isStudent! ? true : false
                 cell.titleLabel.text = user?.name
                 cell.subtitleLabel.text = user?.studyList[0].title
+                cell.delegate = self
+                
                 if let imageUrl = user?.profileImageUrl {
                     cell.profileImageView.loadImageWithCache(with: imageUrl)
                 }
@@ -309,6 +265,7 @@ class ProfileController: UITableViewController {
                 cell.messageButton.addTarget(self, action: #selector(handleSendMessage), for: .touchUpInside)
                 cell.titleLabel.text = user?.name
                 cell.subtitleLabel.text = user?.studyList[0].title
+                
                 if let imageUrl = user?.profileImageUrl {
                     cell.profileImageView.loadImageWithCache(with: imageUrl)
                 }
@@ -334,7 +291,10 @@ class ProfileController: UITableViewController {
                     let cell = tableView.dequeueReusableCell(withIdentifier: descriptionId, for: indexPath) as! UserDescriptionCell
                     cell.titleLabel.text = card.title
                     cell.detailLabel.text = card.detailTitle
-                    if let startTimeText = card.startTime, let endTimeText = card.endTime, startTimeText != "", endTimeText != ""  {
+                    
+                    if let startTime = card.startTimestamp, let endTime = card.endTimestamp {
+                        let startTimeText = startTime.transformToText(with: "YYYY.M")
+                        let endTimeText = endTime.transformToText(with: "YYYY.M")
                         cell.timeLabel.text = "\(startTimeText)-\(endTimeText)"
                     } else {
                         cell.timeLabel.text = ""
@@ -351,12 +311,16 @@ class ProfileController: UITableViewController {
         if let headerCell = sender.superview as? HeaderTableViewCell {
             editVC.textInput.placeholder = headerCell.titleLabel.text
         }
+        editVC.isStudent = isStudent
         editVC.navigationItem.title = "Edit Name"
         navigationController?.pushViewController(editVC, animated: true)
     }
     
     @objc private func handleSendMessage(_ sender: UIButton) {
-        print(123)
+        let layout = UICollectionViewFlowLayout()
+        let chatLogVC = ChatLogController(collectionViewLayout: layout)
+        chatLogVC.user = user
+        navigationController?.pushViewController(chatLogVC, animated: true)
     }
     
     @objc private func handleEdit(_ sender: UIButton) {
@@ -372,7 +336,20 @@ class ProfileController: UITableViewController {
                 navigationController?.pushViewController(collectionVC, animated: true)
             }
         }
-//        
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 5 {
+            if let link = user?.linkList[indexPath.row-1].detailTitle {
+                openUrl(urlStr: link)
+            }
+        }
+    }
+    
+    private func openUrl(urlStr: String) {
+        if let url = URL(string: urlStr)  {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -393,6 +370,29 @@ class ProfileController: UITableViewController {
             }
             return 92
         }
+    }
+}
+
+extension NSNumber {
+    func transformToText(with format: String) -> String {
+            let seconds = self.doubleValue
+            let date = Date(timeIntervalSince1970: seconds)
+            let dateFormatter = DateFormatter()
+            
+            dateFormatter.dateFormat = format
+            
+            let elapsedTimeInSeconds = NSDate().timeIntervalSince(date)
+            
+            let secondsInDays: TimeInterval = 60 * 60 * 24
+            
+            return dateFormatter.string(from: date)
+            
+//            timeLabel.text = dateFormatter.string(from: date)
+    }
+    
+    func transformToDate() -> Date {
+        let seconds = self.doubleValue
+        return Date(timeIntervalSince1970: seconds)
     }
 }
 

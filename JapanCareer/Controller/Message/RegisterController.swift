@@ -15,19 +15,6 @@ class RegisterController: UIViewController {
         return studentCompanySegmentedControl.selectedSegmentIndex == 0 ? true : false
     }
     
-    var dismissButton : UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .red
-        button.setTitle("dismiss", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
-        return button
-    }()
-    
-    @objc private func handleDismiss() {
-        dismiss(animated: true, completion: nil)
-    }
-    
     var messageController : MessageController?
     
     private var backgroundImageView: UIImageView = {
@@ -56,6 +43,7 @@ class RegisterController: UIViewController {
     
     var nameInput: LoginInputCell = {
         var inputView = LoginInputCell()
+        inputView.textInput.text = nil
         inputView.titleLabel.text = "Name"
         inputView.imageIcon.image = UIImage(named: "account")
         inputView.translatesAutoresizingMaskIntoConstraints = false
@@ -64,6 +52,7 @@ class RegisterController: UIViewController {
     
     var emailInput: LoginInputCell = {
         var inputView = LoginInputCell()
+        inputView.textInput.text = nil
         inputView.titleLabel.text = "Email"
         inputView.imageIcon.image = UIImage(named: "email")
         inputView.translatesAutoresizingMaskIntoConstraints = false
@@ -72,6 +61,7 @@ class RegisterController: UIViewController {
     
     var passwordInput: LoginInputCell = {
         var inputView = LoginInputCell()
+        inputView.textInput.text = nil
         inputView.titleLabel.text = "Password"
         inputView.imageIcon.image = UIImage(named: "password")
         inputView.textInput.isSecureTextEntry = true
@@ -146,7 +136,6 @@ class RegisterController: UIViewController {
     
     @objc private func handleShowLogin() {
         let loginController = LoginController()
-        loginController.messageControler = messageController
         present(loginController, animated: true, completion: nil)
     }
     
@@ -158,38 +147,53 @@ class RegisterController: UIViewController {
         setupInputFields()
         setupButton()
         setupSignInBar()
-        setupImageView()
         setupSegmentedControl()
+        setupImageView()
+        
+        let resignTap = UITapGestureRecognizer(target: self, action: #selector(handleResign))
+        view.addGestureRecognizer(resignTap)
+    }
     
-        view.addSubview(dismissButton)
-        dismissButton.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        dismissButton.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        dismissButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        dismissButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    @objc func handleResign() {
+        
+        
+        nameInput.textInput.resignFirstResponder()
+        emailInput.textInput.resignFirstResponder()
+        passwordInput.textInput.resignFirstResponder()
     }
     
     private func setupSegmentedControl() {
         view.addSubview(studentCompanySegmentedControl)
+        
+        if UIDevice.current.modelName == "iPhone 5s" || UIDevice.current.modelName == "iPhone6,1" {
+            studentCompanySegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            studentCompanySegmentedControl.bottomAnchor.constraint(equalTo: nameInput.topAnchor, constant: -15).isActive = true
+            studentCompanySegmentedControl.widthAnchor.constraint(equalToConstant: 200).isActive = true
+            studentCompanySegmentedControl.heightAnchor.constraint(equalToConstant: 24).isActive = true
+            return
+        }
+        
         studentCompanySegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        studentCompanySegmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 210).isActive = true
+        studentCompanySegmentedControl.bottomAnchor.constraint(equalTo: nameInput.topAnchor, constant: -35).isActive = true
         studentCompanySegmentedControl.widthAnchor.constraint(equalToConstant: 244).isActive = true
         studentCompanySegmentedControl.heightAnchor.constraint(equalToConstant: 29).isActive = true
     }
     
     private func setupImageView() {
         view.addSubview(imageView)
+        
+        if UIDevice.current.modelName == "iPhone 5s" || UIDevice.current.modelName == "iPhone6,1" {
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            imageView.bottomAnchor.constraint(equalTo: studentCompanySegmentedControl.topAnchor, constant: -14).isActive = true
+            imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            return
+        }
+        
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 71).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-    }
-    
-    private func setupTextView() {
-        view.addSubview(titleText)
-        titleText.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 132).isActive = true
-        titleText.widthAnchor.constraint(equalToConstant: 231).isActive = true
-        titleText.heightAnchor.constraint(equalToConstant: 29).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: studentCompanySegmentedControl.topAnchor, constant: -24).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 90).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 90).isActive = true
     }
 
     private func setupBackgroundImageView() {
@@ -202,6 +206,7 @@ class RegisterController: UIViewController {
     
     private func setupBackgroundFilter() {
         view.addSubview(backgroundFilter)
+        
         backgroundFilter.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         backgroundFilter.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         backgroundFilter.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
@@ -213,18 +218,46 @@ class RegisterController: UIViewController {
         view.addSubview(emailInput)
         view.addSubview(passwordInput)
         
-        nameInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        nameInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -373).isActive = true
-        nameInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
-        nameInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        if UIDevice.current.modelName == "iPhone 5s" || UIDevice.current.modelName == "iPhone6,1" {
+            let fontConstant: CGFloat  = 15
+            emailInput.textInput.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            emailInput.titleLabel.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            nameInput.textInput.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            nameInput.titleLabel.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            passwordInput.textInput.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            passwordInput.titleLabel.font = UIFont.systemFont(ofSize: fontConstant, weight: .regular)
+            
+            emailInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            emailInput.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -45).isActive = true
+            emailInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
+            emailInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
+            
+            nameInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            nameInput.bottomAnchor.constraint(equalTo: emailInput.topAnchor, constant: -37).isActive = true
+            nameInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
+            nameInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
+            
+            passwordInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            passwordInput.topAnchor.constraint(equalTo: emailInput.bottomAnchor, constant: 37).isActive = true
+            passwordInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
+            passwordInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
+            return
+        }
+        
         
         emailInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        emailInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -302).isActive = true
+        emailInput.bottomAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         emailInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
         emailInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
+        nameInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        nameInput.bottomAnchor.constraint(equalTo: emailInput.topAnchor, constant: -37).isActive = true
+        nameInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
+        nameInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        
+        
         passwordInput.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        passwordInput.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -228).isActive = true
+        passwordInput.topAnchor.constraint(equalTo: emailInput.bottomAnchor, constant: 37).isActive = true
         passwordInput.widthAnchor.constraint(equalToConstant: 351).isActive = true
         passwordInput.heightAnchor.constraint(equalToConstant: 35).isActive = true
 
@@ -232,14 +265,52 @@ class RegisterController: UIViewController {
     
     private func setupButton() {
         view.addSubview(registerButton)
+        if UIDevice.current.modelName == "iPhone 5s" || UIDevice.current.modelName == "iPhone6,1" {
+            registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            registerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -127).isActive = true
+            registerButton.widthAnchor.constraint(equalToConstant: 271).isActive = true
+            registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            return
+        }
+        
         registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        registerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -117).isActive = true
+        registerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -157).isActive = true
         registerButton.widthAnchor.constraint(equalToConstant: 271).isActive = true
         registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     private func setupSignInBar() {
         view.addSubview(signInBar)
+        
+        if UIDevice.current.modelName == "iPhone 5s" || UIDevice.current.modelName == "iPhone6,1" {
+            textLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+            var attributedText = NSAttributedString(string: "here",
+                                                    attributes:
+                [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 14, weight: .bold),
+                 NSAttributedStringKey.foregroundColor : UIColor.white]
+            )
+            signInLink.setAttributedTitle(attributedText, for: .normal)
+            
+            signInBar.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+            signInBar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            signInBar.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+            signInBar.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            
+            signInBar.addSubview(textLabel)
+            textLabel.leftAnchor.constraint(equalTo: signInBar.leftAnchor, constant:15).isActive = true
+            textLabel.centerYAnchor.constraint(equalTo: signInBar.centerYAnchor).isActive = true
+            textLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
+            textLabel.heightAnchor.constraint(equalToConstant: 19).isActive = true
+            
+            signInBar.addSubview(signInLink)
+            signInLink.leftAnchor.constraint(equalTo: textLabel.rightAnchor).isActive = true
+            signInLink.centerYAnchor.constraint(equalTo: signInBar.centerYAnchor).isActive = true
+            signInLink.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            signInLink.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            
+            return
+        }
+
         signInBar.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         signInBar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         signInBar.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
@@ -256,24 +327,9 @@ class RegisterController: UIViewController {
         signInLink.centerYAnchor.constraint(equalTo: signInBar.centerYAnchor).isActive = true
         signInLink.widthAnchor.constraint(equalToConstant: 36).isActive = true
         signInLink.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        
     }
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 

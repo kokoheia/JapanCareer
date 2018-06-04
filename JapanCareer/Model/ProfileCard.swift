@@ -13,13 +13,35 @@ class ProfileCard: Equatable, NSCopying {
     
     var type: ProfileCardType?
     var sectionName: String?
-    
+
     var title: String?
     var detailTitle: String?
-    var startTime: String?
-    var endTime: String?
+    var startTimestamp: NSNumber?
+    var endTimestamp: NSNumber?
     
-    lazy var labelDataList = [title, detailTitle, startTime, endTime]
+//    var startYear: Int? {
+//        if let start = startTime {
+//            let index = start.index(start.startIndex, offsetBy: 4)
+//            let substring = start.prefix(upTo: index)
+//            return Int(substring)
+//        }
+//        return nil
+//    }
+//
+//    var startMonth: Int? {
+//        if let start = startTime {
+//            if let colonIndex = start.index(of: ".") {
+//                let index = start.index(start.index(after: colonIndex), offsetBy: 1)
+//                let substring = start.prefix(upTo: index)
+//                return Int(substring)
+//            }
+//        }
+//        return nil
+//    }
+    
+    lazy var labelDataList = [title, detailTitle, startTimestamp, endTimestamp]
+    
+    
     
     convenience init(type: ProfileCardType) {
         self.init()
@@ -31,11 +53,8 @@ class ProfileCard: Equatable, NSCopying {
         self.type = type
         self.title = dictionary["title"] as? String
         self.detailTitle = dictionary["subtitle"] as? String
-        self.startTime = dictionary["startTime"] as? String
-        self.endTime = dictionary["endTime"] as? String
-        
-        
-        
+        self.startTimestamp = dictionary["startTime"] as? NSNumber
+        self.endTimestamp = dictionary["endTime"] as? NSNumber
     }
     
     func info() {
@@ -43,8 +62,8 @@ class ProfileCard: Equatable, NSCopying {
         print(self.sectionName)
         print(self.title)
         print(self.detailTitle)
-        print(self.startTime)
-        print(self.endTime)
+        print(self.startTimestamp)
+        print(self.endTimestamp)
     }
     
     func editTitles() -> [String] {
@@ -57,11 +76,13 @@ class ProfileCard: Equatable, NSCopying {
             return ["Title", "Experience"]
         case .language:
             return ["Language", "Level"]
+        case .link:
+            return ["Title", "Link"]
         }
     }
     
     static func == (lhs: ProfileCard, rhs: ProfileCard) -> Bool {
-        if lhs.title == rhs.title, lhs.detailTitle == rhs.detailTitle, lhs.startTime == rhs.startTime, lhs.endTime == rhs.endTime {
+        if lhs.title == rhs.title, lhs.detailTitle == rhs.detailTitle, lhs.startTimestamp == rhs.startTimestamp, lhs.endTimestamp == rhs.endTimestamp {
             return true
         }
         return false
@@ -71,8 +92,8 @@ class ProfileCard: Equatable, NSCopying {
         let copy = ProfileCard()
         copy.title = title
         copy.detailTitle = detailTitle
-        copy.startTime = startTime
-        copy.endTime = endTime
+        copy.startTimestamp = startTimestamp
+        copy.endTimestamp = endTimestamp
         return copy
     }
 }
@@ -83,4 +104,9 @@ enum ProfileCardType: String {
     case intern = "Intern"
     case skill = "Skill"
     case language = "Language"
+    case link = "Link"
+    
+    static var count: Int {
+        return link.hashValue + 1
+    }
 }

@@ -34,15 +34,15 @@ class Company {
         self.domain = dictionary["domain"] as? String
         self.place = dictionary["place"] as? String
         
-        
         if let dict = dictionary["about"] as? Dictionary<String, AnyObject> {
-            if let values = Array(dict.values) as? [Dictionary<String, AnyObject>] {
-                aboutInfo = []
-                for index in values.indices {
-                    if let dict = values[index] as? [String: String] {
-                        let about = CompanyInfo(dictionary: dict, type: .about)
-                        aboutInfo.append(about)
-                    }
+            print(dict)
+            aboutInfo = []
+            let sortedKeys = Array(dict.keys).sorted(by: <)
+            for index in 0..<dict.count {
+                let key = sortedKeys[index]
+                if let aboutDict = dict[key] as? [String: String]{
+                    let about = CompanyInfo(dictionary: aboutDict, type: .about)
+                    aboutInfo.append(about)
                 }
             }
         }

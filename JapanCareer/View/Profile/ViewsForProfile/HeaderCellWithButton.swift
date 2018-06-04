@@ -36,6 +36,8 @@ class HeaderCellWithButton: BaseTableViewCell {
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.layer.cornerRadius = 46
         iv.layer.masksToBounds = true
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
         return iv
     }()
     

@@ -13,7 +13,85 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     
     private var isHeaderImageEditing = false
     private var isProfileImageEditing = false
+
+    var isStudent: Bool?
+    var isApplying = false
+    var company: Company?
     
+    var currentTabNumber = 0
+    var companyHeaderId = "companyHeaderId"
+    var companyDescriptionId = "companyDescriptionId"
+    var buttonCellId = "buttonCellId"
+    var companyDescriptionViewId = "companyDescriptionViewId"
+    let cellId = "cellId"
+    
+    var currentDescriptionViewData: [CompanyInfo] {
+        get {
+            return company?.infoList[currentTabNumber] ?? []
+        }
+    }
+    
+    private func checkIsApplying() -> Bool? {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("couldn't get uid")
+            return nil
+        }
+        
+        if let companyId = company?.id {
+            let ref = Database.database().reference().child("user-apply").child(companyId)
+            ref.observe(.childAdded, with: { [weak self] (snapshot) in
+                if snapshot.key == uid {
+                    self?.isApplying = true
+                    DispatchQueue.main.async {
+                        self?.tableView.reloadData()
+                    }
+                    return
+                }
+            }, withCancel: nil)
+        }
+        return true
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.register(CompanyHeaderCell.self, forCellReuseIdentifier: companyHeaderId)
+        tableView.register(CompanyDescriptionTableViewCell.self, forCellReuseIdentifier: companyDescriptionId)
+        tableView.register(ButtonTableViewCell.self, forCellReuseIdentifier: buttonCellId)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        tableView.separatorColor = .clear
+        let selectedIndexPath = IndexPath(item: 0, section: 0)
+        containerCollectionView.selectItem(at: selectedIndexPath, animated: true, scrollPosition: [])
+        tableView.backgroundColor = .white
+        if !isStudent! {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        }
+        fetchCompanyData()
+        checkIsApplying()
+        
+    }
+    
+    @objc private func handleLogout(){
+        do {
+            try Auth.auth().signOut()
+        } catch let logoutError {
+            print(logoutError)
+            return
+        }
+        
+        let loginVC = RegisterController()
+        present(loginVC, animated: true, completion: nil)
+    }
+    
+    private func setupEditButton(with cell: CompanyDescriptionTableViewCell) {
+        if isStudent! {
+            cell.editButton.isHidden = true
+            cell.editButton.isEnabled = false
+        } else {
+            cell.editButton.isHidden = false
+            cell.editButton.isEnabled = true
+            cell.editButton.addTarget(self, action: #selector(handleEdit), for: .touchUpInside)
+        }
+    }
     
     func handleSetupHeaderImage() {
         isHeaderImageEditing = true
@@ -53,25 +131,26 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
                 let storageRef = Storage.storage().reference().child("profile-images").child("\(imageName).jpg")
                 storageRef.putData(imageData, metadata: nil, completion: { [weak self] (metadata, err) in
                     
+                    if err != nil {
+                        print(err!)
+                        return
+                    }
+                    
                     if let imageUrlString = metadata?.downloadURL()?.absoluteString {
-                        //                        let userType = self.isStudent ? "student" : "company"
                         var values = [String:String]()
                         
                         if (self?.isProfileImageEditing)! {
                             values = ["profileImageUrl": imageUrlString]
-                             self?.company?.profileImageUrl = imageUrlString
+                            self?.company?.profileImageUrl = imageUrlString
                         } else if (self?.isHeaderImageEditing)! {
                             values = ["headerImageUrl": imageUrlString]
                             self?.company?.headerImageUrlStr = imageUrlString
                         }
                         
-                        if err != nil {
-                            print(err!)
-                            return
-                        }
+                        
                         let ref = Database.database().reference().child("users").child("company").child(uid)
                         ref.updateChildValues(values)
-                       
+                        
                         
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -82,68 +161,9 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
                     }
                 })
             }
-        } 
-//        let ref = Database.database().reference().child("users").child("comapany").child(uid)
-//        let values = ["profileImageUrl"]
-        
+        }
         dismiss(animated: true, completion: nil)
     }
-
-    
-    var isStudent: Bool?
-    
-    var company: Company?
-    
-    var currentTabNumber = 0
-    var companyHeaderId = "companyHeaderId"
-    var companyDescriptionId = "companyDescriptionId"
-    var buttonCellId = "buttonCellId"
-    var companyDescriptionViewId = "companyDescriptionViewId"
-    let cellId = "cellId"
-    
-    var currentDescriptionViewData: [CompanyInfo] {
-        get {
-            return company?.infoList[currentTabNumber] ?? []
-        }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.register(CompanyHeaderCell.self, forCellReuseIdentifier: companyHeaderId)
-        tableView.register(CompanyDescriptionTableViewCell.self, forCellReuseIdentifier: companyDescriptionId)
-        tableView.register(ButtonTableViewCell.self, forCellReuseIdentifier: buttonCellId)
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        tableView.separatorColor = .clear
-        let selectedIndexPath = IndexPath(item: 0, section: 0)
-        containerCollectionView.selectItem(at: selectedIndexPath, animated: true, scrollPosition: [])
-//        setupNavBar()
-        
-//        self.tabBarController?.tabBar.isHidden = true
-        tableView.backgroundColor = .white
-        
-        fetchCompanyData()
-    }
-    
-    private func setupEditButton(with cell: CompanyDescriptionTableViewCell) {
-        if isStudent! {
-            cell.editButton.isHidden = true
-            cell.editButton.isEnabled = false
-        } else {
-            cell.editButton.isHidden = false
-            cell.editButton.isEnabled = true
-            cell.editButton.addTarget(self, action: #selector(handleEdit), for: .touchUpInside)
-        }
-    }
-    
-//    private func setupNavBar() {
-////        let editButton = UIBarButtonItem(title: "Change Mode", style: .plain, target: self, action: #selector(handleChangeTest))
-////        navigationItem.rightBarButtonItem = editButton
-//    }
-//
-//    @objc private func handleChangeTest() {
-//        isStudent = !isStudent!
-//        tableView.reloadData()
-//    }
 
     @objc private func handleEdit(_ sender: UIButton) {
         let cell = sender.superview as! CompanyDescriptionTableViewCell
@@ -165,66 +185,82 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         }
     }
 
-    private func fetchCompanyData() {
+    func fetchCompanyData() {
         if !isStudent! {
             guard let uid = Auth.auth().currentUser?.uid else {
                 print("couldn't get uid")
                 return
             }
-//            company = Company()
             let ref = Database.database().reference().child("users").child("company").child(uid)
             ref.observeSingleEvent(of: .value) { [weak self] (snapshot) in
-                
-//                let aboutRef = ref.child("about")
-//                let jobRef = ref.child("job")
-//                let otherRef = ref.child("other")
-                
+
                 if let dictionary = snapshot.value as? [String : AnyObject] {
                     self?.company = Company(dictionary: dictionary)
                 }
+                
+                self?.company?.id = snapshot.key
+                
                 
                 DispatchQueue.main.async { [weak self] in
                     self?.tableView.reloadData()
                 }
             }
-            
-            
-            
-//            aboutRef.observe(.childAdded, with: { [weak self] (snapshot) in
-//                if let dictionary = snapshot.value as? [String: String] {
-//                    let aboutInfo = CompanyInfo(dictionary: dictionary, type: .about)
-//                    self?.company?.aboutInfo = []
-//                    self?.company?.infoList[0].append(aboutInfo)
-//                    DispatchQueue.main.async { [weak self] in
-//                        self?.tableView.reloadData()
-//                    }
-//                }
-//                }, withCancel: nil)
-//
-//            jobRef.observe(.childAdded, with: { [weak self] (snapshot) in
-//                if let dictionary = snapshot.value as? [String: String] {
-//                    let jobInfo = CompanyInfo(dictionary: dictionary, type: .job)
-//                    self?.company?.jobInfo = []
-//                    self?.company?.infoList[1].append(jobInfo)
-//                    DispatchQueue.main.async { [weak self] in
-//                        self?.tableView.reloadData()
-//                    }
-//                }
-//                }, withCancel: nil)
-//
-//            otherRef.observe(.childAdded, with: { [weak self] (snapshot) in
-//                if let dictionary = snapshot.value as? [String: String] {
-//                    let otherInfo = CompanyInfo(dictionary: dictionary, type: .other)
-//                    self?.company?.otherInfo = []
-//                    self?.company?.infoList[2].append(otherInfo)
-//                    DispatchQueue.main.async { [weak self] in
-//                        self?.tableView.reloadData()
-//                    }
-//                }
-//            }, withCancel: nil)
         }
     }
+
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == 1 {
+            return true
+        }
+        return false
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard let uid = Auth.auth().currentUser?.uid else  {
+            print("couldn't find uid")
+            return
+        }
+        
+        if let company = company {
+            if currentDescriptionViewData.count > 1 {
+                if let type = currentDescriptionViewData[0].type?.rawValue {
+                    let ref = Database.database().reference().child("users").child("company").child(uid).child(type)
+                    ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                        if let dict = snapshot.value as? [String: AnyObject] {
+                            let keys = Array(dict.keys).sorted(by: <)
+                            let key = keys[indexPath.row]
+                            let deleteRef = ref.child(key)
+                            deleteRef.removeValue{ [weak self] (err, companyRef) in
+                                if let err = err {
+                                    print(err)
+                                    return
+                                }
+                                DispatchQueue.main.async {
+                                    self?.fetchCompanyData()
+                                }
+                            }
+                        }
+                        
+                    
+//                        let typeRef = ref.child("")
+//                        typeRef.removeValue { [weak self] (err, companyRef) in
+//                            if let err = err {
+//                                print(err)
+//                                return
+//                            }
+//                            DispatchQueue.main.async {
+//                                self?.fetchCompanyData()
+//                            }
+//                        }
+                    }, withCancel: nil)
+//                    let typeChild = "\(type)\(indexPath.row+1)"
+                }
+            } else {
+                //sending alert
+            }
+        }
+    }
     
     
     
@@ -250,6 +286,10 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
                 let cell = tableView.dequeueReusableCell(withIdentifier: companyHeaderId, for: indexPath) as! CompanyHeaderCell
                 cell.editButton.addTarget(self, action: #selector(handleEditHeaderInfo), for: .touchUpInside)
                 cell.delegate = self
+                cell.editButton.isUserInteractionEnabled = isStudent! ? false : true
+                cell.editButton.isHidden = isStudent! ? true : false
+                cell.profileImageView.isUserInteractionEnabled = isStudent! ? false : true
+                cell.headerImageView.isUserInteractionEnabled = isStudent! ? false : true
                 if let name = company?.name, let profileImageUrlStr = company?.profileImageUrl, let headerImageUrlStr  = company?.headerImageUrlStr {
                     cell.companyNameLabel.text = company?.name
                     cell.companyPlaceLabel.text = company?.place
@@ -264,6 +304,11 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
                 cell.cellButton.addTarget(self, action: #selector(handleApply), for: .touchUpInside)
                 cell.cellButton.setTitle("Apply", for: .normal)
                 cell.cellButton.setTitleColor(.white, for: .normal)
+                if isApplying {
+                    cell.cellButton.backgroundColor = .lightGray
+                    cell.cellButton.setTitle("Applied", for: .normal)
+                    cell.cellButton.isEnabled = false
+                }
                 return cell
             }
            
@@ -279,12 +324,24 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
     }
 
     @objc private func handleApply(_ sender: UIButton) {
-        sender.backgroundColor = UIColor.applyButtonHighlightedGreen
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { (timer) in
-            sender.backgroundColor = UIColor.applyButtonGreen
-            timer.invalidate()
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("Couldn't get uid")
+            return
         }
         
+        sender.backgroundColor = UIColor.applyButtonHighlightedGreen
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { [weak self] (timer) in
+            sender.backgroundColor = UIColor.applyButtonGreen
+            self?.isApplying = true
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
+            timer.invalidate()
+        }
+        if let companyId = company?.id {
+            let ref = Database.database().reference().child("user-apply").child(companyId)
+            ref.updateChildValues([uid: 1])
+        }
     }
     
     @objc private func handleEditHeaderInfo() {
