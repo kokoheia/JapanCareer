@@ -143,6 +143,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		55199DE1217EFDC00065C4E4 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				55DA86BF2075279E002941F0 /* CustomTabBarController.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		55199DE2217EFDD30065C4E4 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				55648328206D9A1C0049A1C7 /* LoginInputCell.swift */,
+				558F0F4E206EA29300459D94 /* ButtonWithImage.swift */,
+				55DA86C720754CD4002941F0 /* FilteringMenuCell.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		55199DE3217EFDE40065C4E4 /* Storyboard */ = {
+			isa = PBXGroup;
+			children = (
+				551ED1AB206D2AC000102E6C /* Main.storyboard */,
+				551ED1B3206D2AC000102E6C /* LaunchScreen.storyboard */,
+			);
+			path = Storyboard;
+			sourceTree = "<group>";
+		};
 		551ED19B206D2AC000102E6C = {
 			isa = PBXGroup;
 			children = (
@@ -164,18 +191,16 @@
 		551ED1A6206D2AC000102E6C /* JapanCareer */ = {
 			isa = PBXGroup;
 			children = (
+				55199DE3217EFDE40065C4E4 /* Storyboard */,
 				55FA2B1320B6282C00C3F01A /* JapanCareer.entitlements */,
 				55A6A8ED20859EBF004D7206 /* Assets.xcassets */,
-				5544FFB8207169C8006204BE /* Helper */,
+				5544FFB8207169C8006204BE /* Utility */,
 				5564DA65206FF513008E1327 /* Model */,
 				55648323206D4EFC0049A1C7 /* Controller */,
 				551ED1BC206D47F000102E6C /* View */,
 				551ED1A7206D2AC000102E6C /* AppDelegate.swift */,
-				551ED1AB206D2AC000102E6C /* Main.storyboard */,
-				551ED1B3206D2AC000102E6C /* LaunchScreen.storyboard */,
 				551ED1B6206D2AC100102E6C /* Info.plist */,
 				551ED1AE206D2AC000102E6C /* JapanCareer.xcdatamodeld */,
-				55648326206D71860049A1C7 /* GradientMaker.swift */,
 				558F0F50206F2C8100459D94 /* GoogleService-Info.plist */,
 			);
 			path = JapanCareer;
@@ -184,12 +209,10 @@
 		551ED1BC206D47F000102E6C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				55199DE2217EFDD30065C4E4 /* Support */,
 				552546C920825A2000F20AE6 /* Profile */,
 				552546C02082582700F20AE6 /* Search */,
 				552546D4208260C900F20AE6 /* Message */,
-				55648328206D9A1C0049A1C7 /* LoginInputCell.swift */,
-				558F0F4E206EA29300459D94 /* ButtonWithImage.swift */,
-				55DA86C720754CD4002941F0 /* FilteringMenuCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -249,18 +272,19 @@
 			path = Message;
 			sourceTree = "<group>";
 		};
-		5544FFB8207169C8006204BE /* Helper */ = {
+		5544FFB8207169C8006204BE /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				55648326206D71860049A1C7 /* GradientMaker.swift */,
 				5544FFB9207169E6006204BE /* Extensions.swift */,
 			);
-			path = Helper;
+			path = Utility;
 			sourceTree = "<group>";
 		};
 		55648323206D4EFC0049A1C7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				55DA86BF2075279E002941F0 /* CustomTabBarController.swift */,
+				55199DE1217EFDC00065C4E4 /* Support */,
 				558FE6B82077360B0062ABDD /* Profile */,
 				55DA86CD2075823C002941F0 /* Message */,
 				558FE6B7207735DA0062ABDD /* Search */,
