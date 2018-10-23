@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class EditCompanyDescriptionController: UIViewController, UITextViewDelegate {
+final class EditCompanyDescriptionController: UIViewController, UITextViewDelegate {
     
     var currentIndexPath: IndexPath?
     var currentInfo: CompanyInfo?    

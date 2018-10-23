@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EditCollectionViewHeaderCell: BaseCell{
+final class EditCollectionViewHeaderCell: BaseCell{
     
     var titleLabel: UILabel = {
         let label = UILabel()

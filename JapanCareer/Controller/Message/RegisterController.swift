@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class RegisterController: UIViewController {
+final class RegisterController: UIViewController {
     
     var isStudent: Bool {
         return studentCompanySegmentedControl.selectedSegmentIndex == 0 ? true : false

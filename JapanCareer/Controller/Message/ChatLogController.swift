@@ -9,10 +9,9 @@
 import UIKit
 import Firebase
 
-
-class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout {
+final class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout {
     
-    var cellId = "cellId"
+    private var cellId = "cellId"
     
     var user: User? {
         didSet {

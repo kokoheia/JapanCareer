@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChatMessageCell: UICollectionViewCell {
+final class ChatMessageCell: UICollectionViewCell {
         
     var textLabel: UILabel =  {
         let label = UILabel()

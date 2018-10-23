@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Company {
+final class Company {
     var id: String?
     var name : String?
     var place: String?

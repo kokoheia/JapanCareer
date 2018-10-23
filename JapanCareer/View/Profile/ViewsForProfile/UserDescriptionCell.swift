@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UserDescriptionCell : BaseTableViewCell {
+final class UserDescriptionCell : BaseTableViewCell {
     
     var timeLabel: UILabel = {
         let label = UILabel()

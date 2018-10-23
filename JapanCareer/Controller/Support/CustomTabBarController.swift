@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class CustomTabBarController: UITabBarController {
+final class CustomTabBarController: UITabBarController {
     
     var isStudent: Bool?
     
@@ -53,13 +53,18 @@ class CustomTabBarController: UITabBarController {
         }
         
         let loginVC = RegisterController()
-//        loginVC.messageController = self
         present(loginVC, animated: true, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewControllers = [UIViewController(), UIViewController(),  UIViewController()]
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        checkIfUserLoggedIn()
+        
     }
     
     private func setUpViewControllers() {
@@ -117,31 +122,5 @@ class CustomTabBarController: UITabBarController {
             }
         }
     }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        checkIfUserLoggedIn()
-//        print("isStudent of custom tab bar controller is \(isStudent)")
-//
-//        let listNavigationController = UINavigationController(rootViewController: ListViewController(collectionViewLayout: UICollectionViewFlowLayout()))
-//        listNavigationController.tabBarItem.title = "Search"
-//        listNavigationController.tabBarItem.image = UIImage(named: "search")
-//
-//
-//        let messageNC = MessageController()
-//        messageNC.isStudent = isStudent
-//        let messageNavigationController = UINavigationController(rootViewController: messageNC)
-//        messageNavigationController.tabBarItem.title = "Message"
-//        messageNavigationController.tabBarItem.image = UIImage(named: "message")
-//
-//
-//        let profileNavigationController = UINavigationController(rootViewController: ProfileController())
-//        profileNavigationController.tabBarItem.title = "Profile"
-//        profileNavigationController.tabBarItem.image = UIImage(named: "profile")
-//
-//        viewControllers = [messageNavigationController, listNavigationController,  profileNavigationController]
-        
-        
-    }
+
 }

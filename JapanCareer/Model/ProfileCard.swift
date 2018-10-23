@@ -8,8 +8,7 @@
 
 import Foundation
 
-class ProfileCard: Equatable, NSCopying {
-    
+final class ProfileCard: Equatable, NSCopying {
     
     var type: ProfileCardType?
     var sectionName: String?
@@ -19,30 +18,8 @@ class ProfileCard: Equatable, NSCopying {
     var startTimestamp: NSNumber?
     var endTimestamp: NSNumber?
     
-//    var startYear: Int? {
-//        if let start = startTime {
-//            let index = start.index(start.startIndex, offsetBy: 4)
-//            let substring = start.prefix(upTo: index)
-//            return Int(substring)
-//        }
-//        return nil
-//    }
-//
-//    var startMonth: Int? {
-//        if let start = startTime {
-//            if let colonIndex = start.index(of: ".") {
-//                let index = start.index(start.index(after: colonIndex), offsetBy: 1)
-//                let substring = start.prefix(upTo: index)
-//                return Int(substring)
-//            }
-//        }
-//        return nil
-//    }
-    
     lazy var labelDataList = [title, detailTitle, startTimestamp, endTimestamp]
-    
-    
-    
+
     convenience init(type: ProfileCardType) {
         self.init()
         self.type = type
@@ -105,5 +82,4 @@ enum ProfileCardType: String, CaseIterable  {
     case skill = "Skill"
     case language = "Language"
     case link = "Link"
-
 }

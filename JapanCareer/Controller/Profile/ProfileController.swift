@@ -380,14 +380,8 @@ extension NSNumber {
             let dateFormatter = DateFormatter()
             
             dateFormatter.dateFormat = format
-            
-            let elapsedTimeInSeconds = NSDate().timeIntervalSince(date)
-            
-            let secondsInDays: TimeInterval = 60 * 60 * 24
-            
             return dateFormatter.string(from: date)
             
-//            timeLabel.text = dateFormatter.string(from: date)
     }
     
     func transformToDate() -> Date {

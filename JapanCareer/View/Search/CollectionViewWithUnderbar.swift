@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CollectionViewWithUnderbar: UICollectionView  {
+final class CollectionViewWithUnderbar: UICollectionView  {
     var highlightingView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.mainColor

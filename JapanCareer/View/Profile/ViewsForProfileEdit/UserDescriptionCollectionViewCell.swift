@@ -8,8 +8,7 @@
 
 import UIKit
 
-
-class UserDescriptionCollectionViewCell : BaseCell {
+final class UserDescriptionCollectionViewCell : BaseCell {
     var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13 + 2, weight: .regular)

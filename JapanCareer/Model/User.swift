@@ -9,7 +9,7 @@
 import Foundation
 import Firebase
 
-class User: NSObject {
+final class User: NSObject {
     var id: String?
     var name : String?
     var email : String?
@@ -29,27 +29,6 @@ class User: NSObject {
 
     
     lazy var cardList = [studyList, internList, skillList, languageList, linkList]
-    
-//    func getCurrentSchool() -> String {
-//        var school:String?
-//        var latestYear = 1000
-//        var latestMonth = 0
-//        for study in studyList {
-//            if let startY = study.startYear {
-//                if startY > latestYear {
-//                    return study.start
-//                }
-//                if startY >= latestYear {
-//                    latestYear = start
-//                    if startM = study.startMonth {
-//                        if startM > latestYear {
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
     
     func sortCardLists() {
         cardList[0].sort(by: { (card1, card2) -> Bool in

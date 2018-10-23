@@ -9,7 +9,7 @@
 import Foundation
 import Firebase
 
-class Message {
+final class Message {
     var toId: String?
     var fromId: String?
     var timestamp: NSNumber?

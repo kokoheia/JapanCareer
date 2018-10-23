@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CompanyHeaderCell: BaseTableViewCell, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+final class CompanyHeaderCell: BaseTableViewCell, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var delegate: TableDelegate?
     

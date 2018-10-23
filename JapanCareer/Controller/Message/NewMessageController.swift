@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class NewMessageController: UITableViewController {
+final class NewMessageController: UITableViewController {
     
     var isStudent: Bool?
     

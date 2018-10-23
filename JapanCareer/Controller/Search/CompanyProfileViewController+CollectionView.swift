@@ -17,7 +17,7 @@ extension CompanyProfileViewController {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! customNavBarCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CustomNavBarCell
         switch indexPath.item {
         case 0:
             cell.titleLabel.text = "About"

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FilteringMenuCell: UIView {
+final class FilteringMenuCell: UIView {
     
     var iconImage: UIImageView = {
         let iv = UIImageView()

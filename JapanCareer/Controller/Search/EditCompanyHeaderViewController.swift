@@ -9,12 +9,10 @@
 import UIKit
 import Firebase
 
-class EditCompanyHeaderViewController: UIViewController, UITextFieldDelegate {
+final class EditCompanyHeaderViewController: UIViewController, UITextFieldDelegate {
     
     var company: Company?
-    
     var currentIndexPath: IndexPath?
-    
     var currentCompanyDescription: String?
     
     lazy var textInput: UITextField = {
@@ -37,7 +35,6 @@ class EditCompanyHeaderViewController: UIViewController, UITextFieldDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

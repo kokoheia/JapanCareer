@@ -10,13 +10,15 @@
 		3C0C8E3EB4FCA4C9D817A0E9 /* Pods_JapanCareer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7174940307CDA263897307D5 /* Pods_JapanCareer.framework */; };
 		55083687208684C000D54D04 /* EditCompanyDescriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55083686208684C000D54D04 /* EditCompanyDescriptionController.swift */; };
 		550836892086FDF800D54D04 /* HeaderCellWithButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550836882086FDF800D54D04 /* HeaderCellWithButton.swift */; };
+		55199DE5217F021C0065C4E4 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55199DE4217F021C0065C4E4 /* BaseCell.swift */; };
+		55199DE9217F03870065C4E4 /* CompanyDescriptionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55199DE8217F03870065C4E4 /* CompanyDescriptionViewCell.swift */; };
 		551ED1A8206D2AC000102E6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1A7206D2AC000102E6C /* AppDelegate.swift */; };
 		551ED1AA206D2AC000102E6C /* MessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1A9206D2AC000102E6C /* MessageController.swift */; };
 		551ED1AD206D2AC000102E6C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 551ED1AB206D2AC000102E6C /* Main.storyboard */; };
 		551ED1B0206D2AC000102E6C /* JapanCareer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1AE206D2AC000102E6C /* JapanCareer.xcdatamodeld */; };
 		551ED1B5206D2AC000102E6C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 551ED1B3206D2AC000102E6C /* LaunchScreen.storyboard */; };
 		551ED1C0206D491D00102E6C /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551ED1BF206D491D00102E6C /* UserCell.swift */; };
-		552546B62082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift */; };
+		552546B62082537400F20AE6 /* CompanyProfileViewController+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionView.swift */; };
 		552546B8208254EB00F20AE6 /* CompanyDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552546B7208254EB00F20AE6 /* CompanyDescriptionTableViewCell.swift */; };
 		552546BB2082558200F20AE6 /* ButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552546BA2082558200F20AE6 /* ButtonTableViewCell.swift */; };
 		552546BD2082561200F20AE6 /* CollectionViewWithUnderbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552546BC2082561200F20AE6 /* CollectionViewWithUnderbar.swift */; };
@@ -66,6 +68,8 @@
 		245FEBC03CE57D709861E3DF /* Pods-JapanCareer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JapanCareer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JapanCareer/Pods-JapanCareer.debug.xcconfig"; sourceTree = "<group>"; };
 		55083686208684C000D54D04 /* EditCompanyDescriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCompanyDescriptionController.swift; sourceTree = "<group>"; };
 		550836882086FDF800D54D04 /* HeaderCellWithButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCellWithButton.swift; sourceTree = "<group>"; };
+		55199DE4217F021C0065C4E4 /* BaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
+		55199DE8217F03870065C4E4 /* CompanyDescriptionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDescriptionViewCell.swift; sourceTree = "<group>"; };
 		551ED1A4206D2AC000102E6C /* JapanCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JapanCareer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		551ED1A7206D2AC000102E6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		551ED1A9206D2AC000102E6C /* MessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageController.swift; sourceTree = "<group>"; };
@@ -74,7 +78,7 @@
 		551ED1B4206D2AC000102E6C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		551ED1B6206D2AC100102E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		551ED1BF206D491D00102E6C /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
-		552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyProfileViewController+CollectionViewMethods.swift"; sourceTree = "<group>"; };
+		552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyProfileViewController+CollectionView.swift"; sourceTree = "<group>"; };
 		552546B7208254EB00F20AE6 /* CompanyDescriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyDescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		552546BA2082558200F20AE6 /* ButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCell.swift; sourceTree = "<group>"; };
 		552546BC2082561200F20AE6 /* CollectionViewWithUnderbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewWithUnderbar.swift; sourceTree = "<group>"; };
@@ -228,6 +232,8 @@
 				552546B7208254EB00F20AE6 /* CompanyDescriptionTableViewCell.swift */,
 				552546BA2082558200F20AE6 /* ButtonTableViewCell.swift */,
 				55F210F1208D636200465379 /* SearchStudentCell.swift */,
+				55199DE4217F021C0065C4E4 /* BaseCell.swift */,
+				55199DE8217F03870065C4E4 /* CompanyDescriptionViewCell.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -309,7 +315,7 @@
 			children = (
 				55DA86CB2075809B002941F0 /* CompanyProfileViewController.swift */,
 				55DA86C120752848002941F0 /* ListViewController.swift */,
-				552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift */,
+				552546B52082537400F20AE6 /* CompanyProfileViewController+CollectionView.swift */,
 				55083686208684C000D54D04 /* EditCompanyDescriptionController.swift */,
 				55E63F2C20981E3300F39677 /* CompanyEditController.swift */,
 				55E63F2E209BB26900F39677 /* CompanyHeaderEditController.swift */,
@@ -526,15 +532,17 @@
 				55DA86B82071818C002941F0 /* ChatLogController.swift in Sources */,
 				551ED1A8206D2AC000102E6C /* AppDelegate.swift in Sources */,
 				552546B8208254EB00F20AE6 /* CompanyDescriptionTableViewCell.swift in Sources */,
+				55199DE5217F021C0065C4E4 /* BaseCell.swift in Sources */,
 				55B7D69F20807A34009CBA51 /* EditViewController.swift in Sources */,
 				552546D120825BE300F20AE6 /* UserDescriptionCollectionViewCell.swift in Sources */,
 				55C8800C2075F43300CDC8A5 /* CustomBarWithDescriptionView.swift in Sources */,
 				55DA86C4207528A8002941F0 /* ProfileController.swift in Sources */,
 				55DA86BA2071A500002941F0 /* Message.swift in Sources */,
+				55199DE9217F03870065C4E4 /* CompanyDescriptionViewCell.swift in Sources */,
 				55B288F8207CECA400C4DB82 /* CompanyInfo.swift in Sources */,
 				55F210F2208D636300465379 /* SearchStudentCell.swift in Sources */,
 				552546C820825A0400F20AE6 /* FooterTableViewCell.swift in Sources */,
-				552546B62082537400F20AE6 /* CompanyProfileViewController+CollectionViewMethods.swift in Sources */,
+				552546B62082537400F20AE6 /* CompanyProfileViewController+CollectionView.swift in Sources */,
 				550836892086FDF800D54D04 /* HeaderCellWithButton.swift in Sources */,
 				5564DA64206FF140008E1327 /* LoginController.swift in Sources */,
 				55DA86C820754CD4002941F0 /* FilteringMenuCell.swift in Sources */,

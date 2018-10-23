@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class ListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
+final class ListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
     var isStudent: Bool?
     var isFiltered = false

@@ -8,8 +8,7 @@
 
 import UIKit
 
-class LoginInputCell: UIView, UITextFieldDelegate {
-    
+final class LoginInputCell: UIView, UITextFieldDelegate {
     
     var imageIcon : UIImageView = {
         var imageView = UIImageView()

@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class CompanyProfileViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, TableDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+final class CompanyProfileViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, TableDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     private var isHeaderImageEditing = false
     private var isProfileImageEditing = false
@@ -241,20 +241,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
                                 }
                             }
                         }
-                        
-                    
-//                        let typeRef = ref.child("")
-//                        typeRef.removeValue { [weak self] (err, companyRef) in
-//                            if let err = err {
-//                                print(err)
-//                                return
-//                            }
-//                            DispatchQueue.main.async {
-//                                self?.fetchCompanyData()
-//                            }
-//                        }
                     }, withCancel: nil)
-//                    let typeChild = "\(type)\(indexPath.row+1)"
                 }
             } else {
                 //sending alert
@@ -291,7 +278,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
                 cell.profileImageView.isUserInteractionEnabled = isStudent! ? false : true
                 cell.headerImageView.isUserInteractionEnabled = isStudent! ? false : true
                 if let name = company?.name, let profileImageUrlStr = company?.profileImageUrl, let headerImageUrlStr  = company?.headerImageUrlStr {
-                    cell.companyNameLabel.text = company?.name
+                    cell.companyNameLabel.text = name
                     cell.companyPlaceLabel.text = company?.place
                     cell.companyIndustryLabel.text = company?.domain
                     cell.profileImageView.loadImageWithCache(with: profileImageUrlStr)
@@ -390,7 +377,7 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         cv.allowsSelection = true
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.backgroundColor = .white
-        cv.register(customNavBarCell.self, forCellWithReuseIdentifier: cellId)
+        cv.register(CustomNavBarCell.self, forCellWithReuseIdentifier: cellId)
         cv.dataSource = self
         cv.delegate = self
         return cv
@@ -418,14 +405,6 @@ class CompanyProfileViewController: UITableViewController, UICollectionViewDataS
         containerCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         containerCollectionView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         containerCollectionView.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-//        view.addSubview(highlightingView)
-//
-//        highlightLeftAnchor =  highlightingView.leftAnchor.constraint(equalTo: view.leftAnchor)
-//        highlightLeftAnchor?.isActive = true
-//        highlightingView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-//        highlightingView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/3).isActive = true
-//        highlightingView.heightAnchor.constraint(equalToConstant: 4).isActive = true
     }
 
 

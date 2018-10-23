@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ButtonWithImage: UIView {
+final class ButtonWithImage: UIView {
     
     var icon: UIImageView = {
         var iv = UIImageView()

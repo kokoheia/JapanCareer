@@ -8,8 +8,7 @@
 
 import UIKit
 
-
-class GradientMaker {
+final class GradientMaker {
     static func makeGradient(color1: CGColor, color2: CGColor, point1: CGPoint, point2: CGPoint, view: UIView) {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds

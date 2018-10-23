@@ -8,8 +8,7 @@
 
 import UIKit
 
-class FooterTableViewCell: BaseTableViewCell {
-    
+final class FooterTableViewCell: BaseTableViewCell {
     override func setupViews() {
         super.setupViews()
         backgroundColor = .white

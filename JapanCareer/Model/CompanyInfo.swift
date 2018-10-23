@@ -8,18 +8,13 @@
 
 import Foundation
 
-class CompanyInfo: Equatable {
+final class CompanyInfo: Equatable {
     
     var type: CompanyInfoTitle?
     var titles: String?
     var details: String?
     
-    init() {
-        
-    }
-    
-    convenience init(type: CompanyInfoTitle) {
-        self.init()
+    init(type: CompanyInfoTitle) {
         self.type = type
     }
     

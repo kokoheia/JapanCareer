@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class UserCell: UITableViewCell {
+final class UserCell: UITableViewCell {
     
     var isStudent: Bool?
     

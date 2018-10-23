@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HeaderTableViewCell: BaseTableViewCell {
+final class HeaderTableViewCell: BaseTableViewCell {
     
     var delegate: TableDelegate?
     

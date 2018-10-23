@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UserCardView: UICollectionViewCell {
+final class UserCardView: UICollectionViewCell {
     
     var userImage: UIImageView = {
         let iv = UIImageView()
@@ -76,7 +76,5 @@ class UserCardView: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-
 
 }

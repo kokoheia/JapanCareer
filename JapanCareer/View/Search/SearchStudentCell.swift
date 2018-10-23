@@ -10,7 +10,7 @@
 import UIKit
 import Firebase
 
-class SearchStudentCell: BaseCell {
+final class SearchStudentCell: BaseCell {
     
     var profileImageView: UIImageView = {
         var iv = UIImageView()
@@ -26,7 +26,6 @@ class SearchStudentCell: BaseCell {
         var label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-//        label.textColor = UIColor.myGrayColor
         label.text = "Kohei Arai"
         return label
     }()
@@ -48,15 +47,6 @@ class SearchStudentCell: BaseCell {
         label.text = "Computer Science / Junior"
         return label
     }()
-
-//    var timeLabel: UILabel = {
-//        var label = UILabel()
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-//        label.textColor = UIColor.myGrayColor
-//        label.textAlignment = .right
-//        return label
-//    }()
     
     var separatorLine: UIView = {
         let view = UIView()
@@ -86,15 +76,7 @@ class SearchStudentCell: BaseCell {
         addSubview(majorLabel)
         majorLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 12).isActive = true
         majorLabel.centerYAnchor.constraint(equalTo: schoolLabel.centerYAnchor, constant: 15).isActive = true
-        
-        
-//        addSubview(timeLabel)
-//        timeLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -31).isActive = true
-//        timeLabel.topAnchor.constraint(equalTo: topAnchor, constant: 2).isActive = true
-//        timeLabel.widthAnchor.constraint(equalToConstant: 99).isActive = true
-//        timeLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
-//
-        
+    
         addSubview(separatorLine)
         separatorLine.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         separatorLine.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true

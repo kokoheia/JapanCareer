@@ -97,7 +97,6 @@ extension RegisterController: UIImagePickerControllerDelegate, UINavigationContr
 //            self?.messageController?.navigationItem.title = values["name"] as? String
 //            self?.messageController?.isStudent = self?.isStudent
             
-
             if let presentingVC = self?.presentingViewController as? CustomTabBarController {
                 presentingVC.isStudent = self?.isStudent
                 presentingVC.selectedIndex = 2

@@ -8,9 +8,7 @@
 
 import UIKit
 
-import UIKit
-
-class HeaderCellWithButton: BaseTableViewCell {
+final class HeaderCellWithButton: BaseTableViewCell {
     var headerClearView: UIView = {
         let iv = UIView()
         iv.backgroundColor = .clear

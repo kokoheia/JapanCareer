@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CompanyDescriptionTableViewCell: BaseTableViewCell {
+final class CompanyDescriptionTableViewCell: BaseTableViewCell {
     
     var titleLabel: UILabel = {
         var label = UILabel()

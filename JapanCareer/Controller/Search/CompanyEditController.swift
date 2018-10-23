@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 
-class CompanyEditController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+final class CompanyEditController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var isStudent: Bool?
     var currentTabNumber: Int?

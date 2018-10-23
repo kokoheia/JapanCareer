@@ -9,10 +9,10 @@
 import UIKit
 import Firebase
 
-class MessageController: UITableViewController {
+final class MessageController: UITableViewController {
     
     var isStudent: Bool?
-    var cellId = "cellId"
+    private var cellId = "cellId"
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

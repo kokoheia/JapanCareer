@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UserDescriptionHeaderCell: BaseTableViewCell {
+final class UserDescriptionHeaderCell: BaseTableViewCell {
     var headerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
