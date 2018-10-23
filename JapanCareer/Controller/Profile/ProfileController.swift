@@ -25,7 +25,7 @@ class ProfileController: UITableViewController, TableDelegate, UIImagePickerCont
     
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return ProfileCardType.count + 1
+        return ProfileCardType.allCases.count + 1
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

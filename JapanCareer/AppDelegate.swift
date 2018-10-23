@@ -30,9 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         
         UITabBar.appearance().tintColor = UIColor.mainColor
 
-        //change status bar color
-        UIApplication.shared.statusBarStyle = .lightContent
-
         //set custom navigation bar
         let navigationBarAppearance = UINavigationBar.appearance()
         navigationBarAppearance.tintColor = .white

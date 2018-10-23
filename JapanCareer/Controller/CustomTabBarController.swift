@@ -15,20 +15,20 @@ class CustomTabBarController: UITabBarController {
     
     private func checkIfUserLoggedIn() {
         if let uid = Auth.auth().currentUser?.uid {
-//            fetchUserAndSetUpNavBarTitle()
             checkIfUserStudentOrCompany(with: uid)
         } else {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
     }
     
-    private func checkIfUserStudentOrCompany(with uid: String) {
+    private func checkIfUserStudentOrCompany(with uid: String ) {
         //check if the user is student
         let studentRef = Database.database().reference().child("users").child("student")
         studentRef.observe(.childAdded, with: { [weak self] (snapshot) in
             if snapshot.key == uid {
                 self?.isStudent = true
                 self?.setUpViewControllers()
+                
             }
             }, withCancel: nil)
         
@@ -40,6 +40,8 @@ class CustomTabBarController: UITabBarController {
                 self?.setUpViewControllers()
             }
         }, withCancel: nil)
+        
+        
     }
     
     @objc private func handleLogout(){
@@ -57,8 +59,7 @@ class CustomTabBarController: UITabBarController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        viewControllers = [UIViewController(), UIViewController(),  UIViewController()]
+        viewControllers = [UIViewController(), UIViewController(),  UIViewController()]
     }
     
     private func setUpViewControllers() {

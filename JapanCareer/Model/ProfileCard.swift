@@ -99,14 +99,11 @@ class ProfileCard: Equatable, NSCopying {
 }
 
 
-enum ProfileCardType: String {
+enum ProfileCardType: String, CaseIterable  {
     case study = "Study"
     case intern = "Intern"
     case skill = "Skill"
     case language = "Language"
     case link = "Link"
-    
-    static var count: Int {
-        return link.hashValue + 1
-    }
+
 }
