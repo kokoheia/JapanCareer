@@ -19,8 +19,26 @@ JapanCareer is a virtual career mathcing app which connects students and tech co
 
 ## Demo
 ### From Students
-<img src="https://user-images.githubusercontent.com/32465018/47353289-d645d600-d6f6-11e8-8646-6dcb3e1e0194.gif">　<img src="https://user-images.githubusercontent.com/32465018/47353291-d645d600-d6f6-11e8-9759-cd2e62e4ddbc.gif">　<img src="https://user-images.githubusercontent.com/32465018/47353290-d645d600-d6f6-11e8-8c15-99f1e39f96af.gif">
+#### Explore companies' info and apply
+<img src="https://user-images.githubusercontent.com/32465018/47353289-d645d600-d6f6-11e8-8646-6dcb3e1e0194.gif">
 
+#### Customize profile
+<img src="https://user-images.githubusercontent.com/32465018/47353291-d645d600-d6f6-11e8-9759-cd2e62e4ddbc.gif">
+
+#### Reply to the company message
+<img src="https://user-images.githubusercontent.com/32465018/47353290-d645d600-d6f6-11e8-8c15-99f1e39f96af.gif">
 <br>
+
 ### From Companies
-<img src="https://user-images.githubusercontent.com/32465018/47353096-61729c00-d6f6-11e8-8303-aed0a13415c6.gif" > <img src="https://user-images.githubusercontent.com/32465018/47353095-60da0580-d6f6-11e8-96ca-56e6a4155386.gif" > <img src="https://user-images.githubusercontent.com/32465018/47353093-60416f00-d6f6-11e8-8ae6-c6f099faba2f.gif" > <img src="https://user-images.githubusercontent.com/32465018/47353097-620b3280-d6f6-11e8-9354-ef9a7e481835.gif">
+
+#### Login and check the profile screen
+<img src="https://user-images.githubusercontent.com/32465018/47353096-61729c00-d6f6-11e8-8303-aed0a13415c6.gif" >
+
+#### Customize profile
+<img src="https://user-images.githubusercontent.com/32465018/47353095-60da0580-d6f6-11e8-96ca-56e6a4155386.gif" >
+
+#### Send messages to the students
+<img src="https://user-images.githubusercontent.com/32465018/47353093-60416f00-d6f6-11e8-8ae6-c6f099faba2f.gif" >
+
+#### Filter applying students
+<img src="https://user-images.githubusercontent.com/32465018/47353097-620b3280-d6f6-11e8-9354-ef9a7e481835.gif">
