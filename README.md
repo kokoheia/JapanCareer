@@ -2,15 +2,15 @@
 
 ## Overview
 JapanCareer is a virtual career mathcing app which connects students and tech companies using [Firebase](https://firebase.google.com/)
-- #### Realtime Messaging
+- ### Realtime Messaging
   - Students and companies can chat through the app
   - You can get notifications of the message powered by [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/)
-- #### Storing data into realtime database and storage
+- ### Storing data into realtime database and storage
   - Students and companies can register there data through the app into database using [Firebase Realtime Database](https://firebase.google.com/docs/database/)
   - Images are stored into [Firebase Cloud Storage](https://firebase.google.com/docs/storage/)
-- #### Viewing students/companies data
+- ### Viewing students/companies data
   - You can see information fetched from the realtime database which students/companies registered into
-- #### Smooth authentification
+- ### Smooth authentification
   - Each user(student / companies) is authentificated by [Firebase Authentification](https://firebase.google.com/docs/auth/)
   - Only authentificated person can edit the data of themselves
 
