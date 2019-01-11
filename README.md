@@ -1,7 +1,7 @@
 # JapanCareer
 
 ## Overview
-JapanCareer is a virtual career mathcing app which connects students and tech companies using [Firebase](https://firebase.google.com/)
+JapanCareer is a virtual career matching app which connects students and tech companies using [Firebase](https://firebase.google.com/)
 - ### Realtime Messaging
   - Students and companies can chat through the app
   - You can get notifications of the message powered by [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/)
