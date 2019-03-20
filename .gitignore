@@ -1,1 +1,4 @@
 GoogleService-Info.plist
+package-lock.json
+firebase-files/functions/package-lock.json
+
